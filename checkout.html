@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Everything Fertility by Himiko</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        :root {
+            --navy: #0E0E29;
+            --pink: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+            color: #0E0E29;
+            line-height: 1.5;
+        }
+
+        .checkout-header {
+            background: var(--navy);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-to-cart {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .back-to-cart:hover {
+            opacity: 0.9;
+        }
+
+        .checkout-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .left-column, .right-column {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            font-size: 1.55rem;
+            margin-bottom: 24px;
+            color: var(--navy);
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--pink);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+        }
+
+        .checkbox-label {
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .pay-btn {
+            width: 100%;
+            background: var(--pink);
+            color: white;
+            padding: 18px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.2);
+        }
+
+        .pay-btn:hover:not(:disabled) {
+            background: #db2777;
+            transform: translateY(-2px);
+        }
+
+        .pay-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* ==================== RESPONSIVE IMPROVEMENTS ==================== */
+        @media (max-width: 900px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .left-column, .right-column {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.45rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-header {
+                padding: 14px 16px;
+            }
+
+            .checkout-container {
+                margin: 16px auto;
+                padding: 0 10px;
+            }
+
+            .left-column, .right-column {
+                padding: 18px;
+                border-radius: 12px;
+            }
+
+            input, select {
+                padding: 13px 14px;
+                font-size: 1rem; /* Prevents zoom on iOS */
+            }
+
+            .pay-btn {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Prevent horizontal scroll */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Make sure no element overflows */
+        img, iframe, video {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="checkout-header">
+        <a href="cart.html" class="back-to-cart">
+            <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+        <div style="font-weight:600;">Secure Checkout</div>
+    </header>
+
+    <div class="checkout-container">
+        <!-- Left: Forms -->
+        <div class="left-column">
+            <h2>Contact</h2>
+            <label>Email <span style="color:red">*</span></label>
+            <input type="email" id="email" required placeholder="your@email.com">
+            <div id="email-error" class="error-msg">Please enter a valid email</div>
+
+            <label class="checkbox-label">
+                <input style="font-size: 12px;" type="checkbox" id="news-offers" checked> 
+                Email me with news and offers
+            </label>
+
+            <h2 style="margin-top:30px;">Delivery Address</h2>
+            <label>Country</label>
+         <select id="country">
+    <option value="US" selected>United States</option>
+    <option value="NG">Nigeria</option>
+    <option value="GB">United Kingdom</option>
+    <option value="CA">Canada</option>
+    <option value="AU">Australia</option>
+    <option value="IN">India</option>
+    <option value="PK">Pakistan</option>
+    <option value="BD">Bangladesh</option>
+    <option value="CN">China</option>
+    <option value="JP">Japan</option>
+    <option value="KR">South Korea</option>
+    <option value="ID">Indonesia</option>
+    <option value="PH">Philippines</option>
+    <option value="VN">Vietnam</option>
+    <option value="TH">Thailand</option>
+    <option value="MY">Malaysia</option>
+    <option value="SG">Singapore</option>
+    <option value="AE">United Arab Emirates</option>
+    <option value="SA">Saudi Arabia</option>
+    <option value="TR">Turkey</option>
+    <option value="RU">Russia</option>
+    <option value="UA">Ukraine</option>
+    <option value="DE">Germany</option>
+    <option value="FR">France</option>
+    <option value="IT">Italy</option>
+    <option value="ES">Spain</option>
+    <option value="PT">Portugal</option>
+    <option value="NL">Netherlands</option>
+    <option value="BE">Belgium</option>
+    <option value="CH">Switzerland</option>
+    <option value="SE">Sweden</option>
+    <option value="NO">Norway</option>
+    <option value="DK">Denmark</option>
+    <option value="FI">Finland</option>
+    <option value="IE">Ireland</option>
+    <option value="PL">Poland</option>
+    <option value="AT">Austria</option>
+    <option value="GR">Greece</option>
+    <option value="CZ">Czech Republic</option>
+    <option value="HU">Hungary</option>
+    <option value="RO">Romania</option>
+    <option value="BR">Brazil</option>
+    <option value="MX">Mexico</option>
+    <option value="AR">Argentina</option>
+    <option value="CL">Chile</option>
+    <option value="CO">Colombia</option>
+    <option value="PE">Peru</option>
+    <option value="NZ">New Zealand</option>
+    <option value="IL">Israel</option>
+    <option value="QA">Qatar</option>
+</select>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <div><label>First Name <span style="color:red">*</span></label><input type="text" id="firstName" required></div>
+                <div><label>Last Name <span style="color:red">*</span></label><input type="text" id="lastName" required></div>
+            </div>
+
+            <label>Full Address <span style="color:red">*</span></label>
+            <input type="text" id="address" required placeholder="Street address">
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <div><label>City <span style="color:red">*</span></label><input type="text" id="city" required></div>
+                <div><label>State/Province <span style="color:red">*</span></label><input type="text" id="state" required></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <div><label>Zip/Postal Code <span style="color:red">*</span></label><input type="text" id="zip" required></div>
+                <div><label>Phone <span style="color:red">*</span></label><input type="tel" id="phone" required placeholder="+234 ..."></div>
+            </div>
+
+            <label class="checkbox-label">
+                <input type="checkbox" id="save-info"> Save this information for next time
+            </label>
+
+          <!-- Shipping Method -->
+<h2 style="margin-top:30px;">Shipping Method</h2>
+<p>Choose Express For FASTER Shipping‼️</p>
+<select id="shipping-method" onchange="updateShipping()">
+    <option>Choose your shipping Method</option>
+    <option value="economy">ECONOMY Shipping| We Are VIRAL🔥|6 Week Shipping Time! - $4.99</option>
+    <option value="standard">STANDARD Shipping| We Are VIRAL🔥|4 Week Shipping Time! - $6.99</option>
+    <option value="express">EXPRESS Shipping💨 | (2-4 days) BUSINESS Day Shipping | - $12.99</option>
+    <option value="pickup">Free shipping $0</option>
+</select>
+            <!-- Tips -->
+            <div style="margin-top:30px; background:#fdf4ff; padding:20px; border-radius:12px;">
+                <h3>Show Your Support 💕</h3>
+                <p style="font-size:0.9rem;color:#64748b;">Optional tip in USD</p>
+                <input type="number" id="tip-amount" placeholder="0.00" min="0" step="0.01" style="margin-top:10px;">
+                <button onclick="updateTip()" style="margin-top:10px; padding:8px 20px; background:var(--pink); color:white; border:none; border-radius:8px; cursor:pointer;">
+                    Add Tip
+                </button>
+                <div id="tip-thankyou" style="color:#10b981; margin-top:10px; display:none; font-weight:500;">
+                    Thank you! We appreciate your love ❤️
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div class="right-column">
+            <h2>Order Summary</h2>
+            <div id="order-items"></div>
+
+            <div style="margin:20px 0; line-height:1.8;">
+                <div style="display:flex;justify-content:space-between;"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+                <div style="display:flex;justify-content:space-between;"><span>Shipping</span><span id="shipping-display">$0.00</span></div>
+                <div style="display:flex;justify-content:space-between;"><span>Tip</span><span id="tip-display">$0.00</span></div>
+            </div>
+
+            <div style="font-size:1.4rem; font-weight:700; border-top:2px solid #e2e8f0; padding-top:15px;">
+                Total: <span id="grand-total">$0.00 USD</span>
+            </div>
+
+            <button onclick="startStripeCheckout()" id="pay-button" class="pay-btn">
+                Pay Now 
+            </button>
+
+            <p style="text-align:center; margin-top:15px; color:#64748b; font-size:0.9rem;">
+                <i class="fas fa-lock"></i> Secure payment powered by Stripe
+            </p>
+        </div>
+    </div>
+
+<script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const supabaseUrl = "https://oyibjutaqanpbjohxthd.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95aWJqdXRhcWFucGJqb2h4dGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzE1NzgsImV4cCI6MjA5ODQwNzU3OH0.r3QMpJVyoNHHaKF_Itjqocr6cjk3OZgK9vMckblPqME";
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const STRIPE_PUBLISHABLE_KEY = "pk_live_51TJ0FPQQoMb8juRRxLplQB3cqwi7Tu7agVjjSU3SOZL5ui7sCwa9ByTISTteGWkJQcIyxQPwqfj2QoIARvGGD7kB00nJnk3hkH";
+    const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+
+    let cart = [];
+    let tipAmount = 0;
+    let shippingAmount = 0;
+
+    const shippingRates = {
+        standard: 6.99,
+        express: 12.99,
+        pickup: 0,
+        economy: 4.99
+    };
+
+    function loadCart() {
+        const saved = localStorage.getItem('cart');
+        if (saved) cart = JSON.parse(saved);
+    }
+
+    function calculateSubtotal() {
+        return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+
+    function updateShipping() {
+        const method = document.getElementById('shipping-method').value;
+        shippingAmount = shippingRates[method] || 0;
+        renderOrderSummary();
+    }
+
+    function renderOrderSummary() {
+        const container = document.getElementById('order-items');
+        let html = '';
+
+        cart.forEach(item => {
+            const total = (item.price * item.quantity).toFixed(2);
+            html += `
+                <div style="display:flex;gap:12px;margin-bottom:15px;">
+                    <img src="${item.image || 'teabag.webp'}"
+                         style="width:60px;height:60px;object-fit:cover;border-radius:8px;"
+                         alt="${item.name}">
+                    <div style="flex:1;">
+                        <div style="font-weight:500;">${item.name || item.displayName}</div>
+                        <div style="color:#64748b; font-size:0.95rem;">Qty: ${item.quantity}</div>
+                    </div>
+                    <div style="font-weight:500;">$${total}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+
+        const subtotal = calculateSubtotal();
+        const grandTotal = subtotal + shippingAmount + tipAmount;
+
+        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('shipping-display').textContent = `$${shippingAmount.toFixed(2)}`;
+        document.getElementById('tip-display').textContent = `$${tipAmount.toFixed(2)}`;
+        document.getElementById('grand-total').textContent = `$${grandTotal.toFixed(2)} USD`;
+    }
+
+    function updateTip() {
+        let val = parseFloat(document.getElementById('tip-amount').value) || 0;
+        tipAmount = Math.max(0, val);
+        renderOrderSummary();
+
+        const thankYou = document.getElementById('tip-thankyou');
+        if (thankYou) {
+            thankYou.style.display = 'block';
+            setTimeout(() => { thankYou.style.display = 'none'; }, 4000);
+        }
+    }
+
+    function validateForm() {
+        const email = document.getElementById('email').value.trim();
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const address = document.getElementById('address').value.trim();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert("Please enter a valid email address");
+            return false;
+        }
+        if (!firstName || !lastName || !address) {
+            alert("Please fill in all required fields: First Name, Last Name, and Address");
+            return false;
+        }
+        return true;
+    }
+
+    // ── Generate order number starting from 9541 ──
+    async function generateOrderNumber() {
+        const { count } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true });
+        return 9541 + (count || 0);
+    }
+
+async function startStripeCheckout() {
+    if (!validateForm()) return;
+
+    const payBtn = document.getElementById('pay-button');
+    if (!payBtn || payBtn.disabled) return;
+
+    payBtn.disabled = true;
+    payBtn.textContent = "Processing...";
+
+    // Get form values
+const email = document.getElementById('email').value.trim();
+const firstName = document.getElementById('firstName').value.trim();
+const lastName = document.getElementById('lastName').value.trim();
+const address = document.getElementById('address').value.trim();
+const city = document.getElementById('city').value.trim();
+const state = document.getElementById('state').value.trim();
+const zip = document.getElementById('zip').value.trim();
+const country = document.getElementById('country').value.trim(); // Good addition
+const phone = document.getElementById('phone').value.trim();
+
+// Shipping
+const shippingSelect = document.getElementById('shipping-method');
+const shippingMethod = shippingSelect.value; // value is usually better
+const shippingDisplay = shippingSelect.options[shippingSelect.selectedIndex]?.text || '';
+
+// Totals
+const subtotal = calculateSubtotal();
+const shippingAmount = parseFloat(shippingSelect.value) || 0; // if shipping has cost
+const tipAmount = parseFloat(document.getElementById('tip-amount')?.value) || 0;
+
+const grandTotal = subtotal + shippingAmount + tipAmount;
+
+
+    try {
+    const orderNumber = await generateOrderNumber();
+    
+    // Create product summary
+    const productSummary = cart.map(item =>
+        `${item.name || item.displayName}${item.variant ? ' (' + item.variant + ')' : ''} x${item.quantity}`
+    ).join(', ');
+    
+    // Insert order into database
+    const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+            order_number: orderNumber,
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            full_address: address,
+            city: city,
+            state: state,
+            zip_code: zip,
+            country: country, // using the variable we extracted
+            phone: phone,
+            
+            product: productSummary,
+            product_image: cart[0]?.image ?
+                (cart[0].image.startsWith('http') ?
+                    cart[0].image :
+                    'https://everythingfertilitybyhimikolei.shop/' + cart[0].image.replace(/^\//, '')) :
+                null,
+            
+            subtotal: parseFloat(subtotal).toFixed(2),
+            shipping: parseFloat(shippingAmount).toFixed(2),
+            tip: parseFloat(tipAmount).toFixed(2),
+            total: parseFloat(grandTotal).toFixed(2),
+            
+            shipping_method: shippingDisplay,
+            status: 'pending',
+            cart_items: JSON.stringify(cart),
+        })
+        .select()
+        .single();
+    
+    if (orderError) {
+        console.error("Order insert error:", orderError);
+        throw new Error("Failed to save order: " + orderError.message);
+    }
+    
+    // Save order data for payment page
+    sessionStorage.setItem('orderData', JSON.stringify({
+        orderId: orderData.id,
+        orderNumber: orderNumber,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        state: state,
+        zip: zip,
+        country: country,
+        phone: phone,
+        
+        shippingMethod: shippingMethod,
+        shippingDisplay: shippingDisplay,
+        
+        cart: cart,
+        subtotal: parseFloat(subtotal).toFixed(2),
+        shipping: parseFloat(shippingAmount).toFixed(2),
+        tip: parseFloat(tipAmount).toFixed(2),
+        grandTotal: parseFloat(grandTotal).toFixed(2)
+    }));
+    
+    // Redirect to payment page
+    window.location.href = 'payment.html';
+    
+} catch (err) {
+    console.error("Checkout Error:", err);
+    payBtn.disabled = false;
+    payBtn.textContent = "Pay Now 💕";
+    alert("Something went wrong. Please try again.\n" + (err.message || err));
+}
+
+}
+    window.startStripeCheckout = startStripeCheckout;
+    window.updateTip           = updateTip;
+    window.updateShipping      = updateShipping;
+
+    window.onload = () => {
+        loadCart();
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            window.location.href = "cart.html";
+            return;
+        }
+        renderOrderSummary();
+    };
+</script>
+
+
+</body>
+</html>

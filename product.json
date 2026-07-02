@@ -1,0 +1,158 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "1st Step Bundle: (2) Pack of Women’s Fertility Tea by Himiko Lei + Serrapeptase + Unlimited 6-Month Consults (Supports tubal ligation reversal, scar tissue & wound repair, hormonal imbalances, ovary & uterus repair, PCOS, fibroids, endometriosis, and more)",
+      "price": 119.99,
+      "images": [
+        "/smalltea.webp",
+        "/small.webp",
+        "/smallback.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "4-Week Fertility Diet Plan by Himiko Lei (Supports improved fertility, conception, toxin release, womb detox, reduced inflammation, implantation support, and overall womb health)",
+      "price": 19.99,
+      "images": [
+        "/watermelon.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "50% OFF SALE - 1st Step Serrapeptase with Unlimited 6-Month Consults (60,000 SPU) - Supports tubal ligation repair, fibroids, endometriosis, blocked or scarred tubes, ovary & uterus repair, and more",
+      "price": 49.99,
+      "images": [
+        "/small.webp",
+        "/smallback.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "50% OFF SALE - 6 Weeks+ / 2nd Step Serrapeptase with Unlimited 6-Month Consults (120,000 SPU) - Supports tubal ligation repair, fibroids, endometriosis, blocked or scarred tubes, ovary & uterus repair, and more",
+      "price": 59.99,
+      "images": [
+        "/big.webp",
+        "/bigback.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "6 Weeks+ / 2nd Step Bundle: (2) Pack of Women’s Fertility Tea by Himiko Lei + Serrapeptase + Unlimited 6-Month Consults (Designed for severe infertility cases, tubal ligation repair, fibroids, endometriosis, blocked/scarring tubes, ovary & uterus repair, and more)",
+      "price": 139.99,
+      "images": [
+        "/bigtea.webp",
+        "/big.webp",
+        "/bigback.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "BUY 1 GET 1 FREE - TikTok Viral Women's Loose Leaf Fertility Support Tea by Himiko Lei + Heart Infuser (Supports tubal ligations, scar tissue & wound repair, hormonal imbalances, ovary & uterus repair, PCOS, fibroids, endometriosis, and more)",
+      "price": 16.99,
+      "images": [
+        "/teabag.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "BUY 1 GET 1 FREE - Himiko’s Blood Blocker Tea for Heavy & Irregular Bleeding (Helps with non-stop bleeding, spotting, heavy flow, and blood clots)",
+      "price": 49.99,
+      "images": [
+        "/redtea.webp",
+        "/redtea2.webp",
+        "/redtea3.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "BUY 1 GET 1 FREE - Women’s Fertility Yoni Steam & Yoni Oil Bundle by Himiko Lei (Helps flush tubes, remove tubal & uterine blockages, support tubal ligation repair, womb & tubal detox, hormonal balance, and blood stagnation)",
+      "price": 29.99,
+      "images": [
+        "/bagtea1.webp",
+        "/bagtea2.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "BUY 1 GET 1 FREE - Men’s Loose Leaf Fertility Tea by Himiko Lei (Supports sperm health, motility, overall fertility, and system detox) - Optional heart-shaped tea infuser available",
+      "price": 17.99,
+      "images": [
+        "/blacktea.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "Fertility/Pregnancy Reading with Himiko Lei + FREE 30-Minute Phone Consultation (Personalized guidance for your fertility journey)",
+      "price": 70.00,
+      "images": [
+        "/testing.webp",
+        "/testing2.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "Himiko’s 90-Day “Heal With Himiko” Fertility Fast Track Program (Intensive support for women who are serious about their fertility healing and results)",
+      "price": 89.99,
+      "images": [
+        "/himiko.webp",
+        "/himiko.webp"
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "Sample Pack - Himiko’s Fertility Tea (Great way to kickstart your healing journey) - Optional heart-shaped tea infuser available",
+      "price": 11.99,
+      "images": [
+        "/lovetea1.webp",
+        "/lovetea2.webp",
+        "/lovetea3.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "TikTok Viral - 14 Count Women’s Fertility Tea by Himiko Lei (Supports tubal ligations, scar tissue & wound repair, hormonal imbalances, ovary & uterus repair, PCOS, fibroids, endometriosis, and more)",
+      "price": 44.99,
+      "images": [
+        "/counttea1.webp",
+        "/counttea2.webp",
+        "/counttea3.webp",
+        "/logo.webp"
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Everything Fertility by Himiko Lei",
+      "description": "“Speak With Himiko” - 30-Minute Phone Consultation (Available same day, 3-day, or extended options)",
+      "price": 50.99,
+      "images": [
+        "/phone.webp",
+        "/logo.webp"
+      ]
+    }
+  ]
+}

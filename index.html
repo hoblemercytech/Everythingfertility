@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything Fertility by Himiko</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Both Sliders at the very top */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+            overflow: hidden;
+        }
+        
+                .hero-slider2 {
+          position: relative;
+          width: 100%;
+          height: 60vh;
+          overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .hero-slide.active {
+            display: flex;
+        }
+
+        .hero-slide.light {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .hero-slide.dark {
+            background: #000;
+            color: white;
+        }
+
+        .hero-content {
+          padding: 20px;
+          font-weight: 400px;
+            max-width: 820px;
+            font-size: 13px;
+            line-height: 1.45;
+            letter-spacing: 0.5px;
+        }
+
+       
+
+        /* Arrows */
+        .hero-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size:12px;
+            padding: 8px 10px;
+            cursor: pointer;
+            color: #888;
+            z-index: 10;
+        }
+
+        .hero-arrow:hover { color: #ff69b4; }
+        .hero-arrow.left { left: 15px; }
+        .hero-arrow.right { right: 15px; }
+
+        .hero-slider.dark .hero-arrow { color: #aaa; }
+        .hero-slider.dark .hero-arrow:hover { color: white; }
+        
+           .hero-slider2.dark .hero-arrow { color: #aaa; }
+        .hero-slider2.dark .hero-arrow:hover { color: white; }
+
+/* Navigation */
+nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #0E0E29;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* Optional placeholder (if needed) */
+.nav-placeholder {
+    height: 78px;
+    display: none;
+}
+
+/* Logo */
+.nav-logo {
+    width: 165px;
+    height: 75px;
+    object-fit: contain;
+}
+
+/* Right icons */
+.nav-icons {
+    display: flex;
+    gap: 22px;
+    font-size: 1.45rem;
+    color: white;
+}
+
+/* Hamburger */
+.hamburger {
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+/* Optional: slight rotate when active */
+.hamburger.active {
+    transform: rotate(90deg);
+}
+
+/* ========================= */
+/* FULLPAGE NAV (UPDATED) */
+/* ========================= */
+
+.fullpage-nav {
+    position: fixed;
+    top: 100px; /* matches nav height */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 78px);
+
+    background:#0E0E29;
+    backdrop-filter: blur(8px);
+
+    /* Animation setup */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        visibility 0.35s ease;
+
+    z-index: 999;
+}
+
+/* Active state */
+.fullpage-nav.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Menu list */
+.fullpage-nav ul {
+    list-style: none;
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 20px;
+}
+
+/* Menu items */
+.fullpage-nav li {
+    margin: 25px 0;
+
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.3s ease;
+}
+
+/* Animate items when open */
+.fullpage-nav.active li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger animation */
+.fullpage-nav.active li:nth-child(1) { transition-delay: 0.1s; }
+.fullpage-nav.active li:nth-child(2) { transition-delay: 0.2s; }
+.fullpage-nav.active li:nth-child(3) { transition-delay: 0.3s; }
+.fullpage-nav.active li:nth-child(4) { transition-delay: 0.4s; }
+
+/* Links */
+.fullpage-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.fullpage-nav a:hover {
+    color: #ff69b4;
+    padding: 20px;
+    width:100%;
+    background: #8E91B3;
+}
+
+/* REMOVE this (no longer needed) */
+/* .close-btn { display: none; } */
+        .first{
+            background: #0E0E29; padding: 20px 20px; 
+            color: white;
+            margin-top: 30px;
+        }
+        
+        .first h1{
+            font-family: sans-serif;
+            font-weight:100;
+        }
+        .first h1 strong{
+            font-weight: 900;
+        }
+ .fertility-promo {
+    color: #d1d5db;
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #0E0E29;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.fertility-promo img {
+    width: 100%;
+    max-width: 620px;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 30px auto 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.offer-headline {
+    font-weight: 400;
+    font-size: 17px;
+    color: #9ca3af;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.urgency-headline {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.urgency-headline span {
+    color: #f9a8d4;
+}
+
+.product-benefits {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin: 25px 0;
+}
+
+.serrapeptase-highlight {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fb7185;
+    margin: 25px 0 12px;
+}
+
+.consult-info {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    max-width: 820px;
+    margin: 0 auto 35px;
+}
+
+.brand-name {
+    font-size: 23px;
+    font-weight: 500;
+    color: #e5e7eb;
+    letter-spacing: 0.5px;
+    margin: 15px 0;
+}
+
+.product-title {
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+/* Pricing */
+.price-container {
+    margin: 25px 0 15px;
+}
+
+.price-with {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.old-price {
+    color: #94a3b8;
+    font-size: 18px;
+}
+
+.new-price {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.sale-badge {
+    background: #000;
+    color: #fff;
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.price-without {
+    font-size: 19px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.shipping-note,
+.infuser-note {
+    color: #94a3b8;
+    font-size: 14.5px;
+    margin: 8px 0;
+}
+
+/* Option Buttons */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 420px;
+    margin: 25px auto;
+}
+
+.btn {
+    padding: 14px 20px;
+    font-size: 15.5px;
+    border-radius: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.without-btn {
+    background: transparent;
+    color: #d1d5db;
+    border-color: #64748b;
+}
+
+.with-btn {
+    background: #fff;
+    color: #0E0E29;
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    max-width: 420px;
+    margin: 30px auto 0;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.add-to-cart {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #64748b;
+}
+
+.add-to-cart:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.buy-now {
+    background: #ec4899;
+    color: white;
+}
+
+.buy-now:hover {
+    background: #db2777;
+    transform: translateY(-2px);
+}
+/* Quantity Selector */
+.quantity-selector {
+    margin: 25px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-selector label {
+    font-size: 15px;
+    color: #e5e7eb;
+    font-weight: 500;
+}
+
+.qty-buttons {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    padding: 4px;
+    border: 1px solid #64748b;
+}
+
+.qty-btn {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.qty-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.qty-buttons input {
+    width: 50px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.qty-note {
+    font-size: 13px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Update final price when quantity changes */
+#with-final-price {
+    transition: all 0.3s ease;
+}
+     .catalog-container {
+         max-width: 1200px;
+         margin: 40px auto;
+         padding: 0 10px;
+     }
+     
+     .catalog-header {
+         text-align: left;
+         margin-bottom: 40px;
+     }
+     
+     .catalog-header h1 {
+         font-size: clamp(28px, 6vw, 42px);
+         font-weight: 600;
+         margin-bottom: 10px;
+     }
+     
+     .products-grid {
+         display: grid;
+         grid-template-columns: repeat(2, 1fr);
+         gap: 20px;
+     }
+     
+     .product-card {
+         
+         border-radius: 16px;
+         overflow: hidden;
+         
+         transition: all 0.3s ease;
+         cursor: pointer;
+     }
+     
+     
+     .product-image {
+         width: 100%;
+         height: 200px;
+         object-fit: cover;
+     }
+     
+     .product-info {
+         padding: 20px 10px 18px;
+     }
+     
+     .product-desc {
+         font-size: 14.8px;
+         color: #64748b;
+         line-height: 1.5;
+         margin-bottom: 16px;
+     }
+     
+     .product-price {
+         font-size: 20px;
+         font-weight: 700;
+         color: var(--navy);
+     }
+     
+     .featured-quantity {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 16px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 2px solid #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.qty-btn {
+    width: 40px;
+    height: 40px;
+    background: #0E0E29;
+    color: white;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.qty-btn:hover {
+    background: #1e1e4d;
+}
+
+#featured-quantity-input {
+    color: white;
+    width: 50px;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    background: transparent;
+}
+
+
+
+.featured-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* FOOTER */
+.footer {
+  background: linear-gradient(135deg, #0E0E29, #1a1a40);
+  color: #fff;
+  padding: 60px 20px 30px;
+  margin-top: 80px;
+}
+
+/* GRID */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* TEXT */
+.footer p {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+/* LINKS */
+.footer a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #ec4899;
+  transform: translateX(4px);
+}
+
+/* SOCIAL */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.footer-socials a:hover {
+  background: #ec4899;
+}
+
+/* SUPPORT BUTTON */
+.support-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* NEWSLETTER */
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+}
+
+.newsletter-form input::placeholder {
+  color: #94a3b8;
+}
+
+.newsletter-form button {
+  background: #ec4899;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* TRUST + PAYMENTS */
+.footer-trust {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.trust-badges span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.trust-badges i {
+  color: #ec4899;
+}
+
+/* PAYMENT ICONS */
+.payment-icons i {
+  font-size: 28px;
+  margin-left: 15px;
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.payment-icons i:hover {
+  color: #ec4899;
+  transform: scale(1.1);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* FLOATING */
+.floating-contact {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .footer-trust {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-icons {
+    margin-top: 10px;
+  }
+}
+
+
+/* Responsive */
+@media (max-width: 640px) {
+    .product-title { font-size: 24px; }
+    .fertility-promo img { height: 290px; }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .fertility-promo img {
+        height: 280px;
+    }
+    
+    .product-title {
+        font-size: 24px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Slider 1 -->
+    <div class="hero-slider" id="slider1">
+        <div class="hero-slide light active">
+            <div class="hero-content">
+                🥺 ALL LOOSE LEAF TEAS ARE BUY 1 GET 1 FREE 💝
+                FINALLY Say Good-Bye To: PCOS, FIBROIDS, ENDOMETRIOSIS, TUBAL LIGATIONS, BLOCKED TUBES, HORMONAL IMBALANCES, HEAVY BLEEDING, PRE-MENOPAUSE, SECONDARY INFERTILITY, CYSTS, SCAR TISSUE 🙏🥺💕
+            </div>
+        </div>
+
+        <div class="hero-slide light">
+            <div class="hero-content">
+                <a style="color: black;" href="smalltea.html">
+                    Recover & Reverse: PCOS, Fibroids, Endometriosis, Blocked Tubes, Tubal Ligations, Scar Tissue, Birth Control Recovery, Cysts, Polyps, Adenomyosis, Hydrosalpinx, Ectopics & More!
+                    The REVIEWS are IN — Himiko's Fertility Support Tea & Supplements are simply THE BEST! →
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-arrow left" onclick="prevSlide1()">❮</div>
+        <div class="hero-arrow right" onclick="nextSlide1()">❯</div>
+    </div>
+
+    <!-- Slider 2 -->
+    <div class="hero-slider2 dark" id="slider2">
+        <div class="hero-slide dark active">
+            <div class="hero-content">
+                ALL LOOSE LEAF TEAS ARE BUY 1 GET 1 FREE 💝 & All Supplements Are 50% OFF!!
+                LETS GET STARTED 🙏🏾 — We can HEAL & Be Pregnant (LIKE ME 🩵) THIS YEAR 💕
+                NO MORE BLOCKED TUBES, SCAR TISSUE, TUBAL LIGATIONS, FIBROIDS, ENDOMETRIOSIS, PCOS — HEAL FROM ECTOPICS & REPAIR YOUR TUBAL REMOVAL 🙌🏾 HEAL YOUR UTERUS & FINALLY GET YOUR BABY 🌈
+            </div>
+        </div>
+
+        <div class="hero-slide dark">
+            <div style="font-size: 15px;" class="hero-content">
+                ⚠️Ladies! There are individuals “pretending” to be Himiko OR Everything Fertility on social media such as TikTok, Instagram and Facebook! Himiko or her team, will NEVER reach out to you on social media, send you a “friend request” follow your account, OR OFFER any kind of products OR services! Everything Fertility will NEVER ask you for money on Apple Pay, PayPal, Cash App, What’s App or any other place. Please use caution. Himiko’s TikTok Has 175K Followers, and her Instagram has 40K Followers. The ONLY way to place an order, to receive an order OR to speak with Himiko is through www.everythingfertilitybyhimikolei.shop OR by sending or receiving an email from our team! (everythingfertilitybyhimikolei@gmail.com)<br/> *All EXPRESS orders WILL receive an email to verify the order*
+            </div>
+        </div>
+
+        <div class="hero-arrow left" onclick="prevSlide2()">❮</div>
+        <div class="hero-arrow right" onclick="nextSlide2()">❯</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="mainNav">
+        <i class="fas fa-bars hamburger" id="hamburger"></i>
+        <img src="./logo.webp" alt="Everything Fertility by Himiko Logo" class="nav-logo">
+        <div class="nav-icons">
+            <i class="fas fa-search"></i>
+            <a href="cart.html" style="position: relative;color: white; text-decoration: none;">
+            <i class="fas fa-shopping-cart"></i>
+<!-- Recommended HTML for the badge -->
+<span id="cart-count" 
+      style="display: none; 
+             position: absolute; 
+             top: -6px; 
+             right: -8px; 
+             background: #e11d48; 
+             color: white; 
+             font-size: 12px; 
+             font-weight: bold;
+             min-width: 18px; 
+             height: 18px; 
+             border-radius: 50%; 
+             padding: 0 5px;
+             display: none;
+             align-items: center;
+             justify-content: center;">
+</span>
+    </a>
+        </div>
+    </nav>
+
+    <div class="nav-placeholder" id="navPlaceholder"></div>
+
+    <!-- Full Page Side Navigation -->
+    <div class="fullpage-nav" id="fullpageNav">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="catalog.html">Catalog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+<hero>
+    <img style="width:100%; height: 100%;" src="teabag.webp" alt="Your favourite tea">
+</hero>
+<section class="first">
+    <h1 style="text-align: center;">🔔Due to our HIGH Volume of Orders Below is our <strong>“Estimated”</strong> Order Shipping Dates📦 <strong>“Estimated”</strong> (Check <strong>DAILY</strong> for Shipping Updates) <strong>If You DO NOT Want The Extended Wait Choose EXPRESS Shipping!!</strong> We Will NOT Be Rushed! <strong> January 16th-31st</strong> orders will ship <strong>April 4th | February -15th</strong> orders will ship <strong>April 18th|March 1st-31st</strong> orders will ship  orders will ship <strong></strong> Shipping Updates Will Be Provided The END Of April <br>
+    💕 **Please keep in mind
+    <strong>YOUR fertility issue has been around LONGER than the time it takes your order to ship. Be patient Queen**</strong> </h1>
+    <br><br><br>
+    <h1 style="text-align: center;">✋🏾STOP Watching Everyone Else’s Healing & START Getting Ready For Yours!!! It’s 2 Cups Per Day!!! Of The World’s 🌏 BEST Fertility Tea🩷 - Himiko Lei (Owner & Creator)</h1>
+    <br><br><br>
+</section>
+<section style="padding:20px 30px;">
+    <h3 style="font-weight: 300;font-style: italic; text-align: center;">As Himiko Likes To Say: “if you’ve been infertile since 1999 you can wait PATIENTLY wait for your order.” When we get to your order date that’s when tracking will be emailed letting you know that your order is BEING WORKED! & PREPARING to ship! Thank You For Your Patience & Support❤️</h3>
+    <br><br><br>
+    <h3 style="font-weight: 300;font-style: italic; text-align: center;">Questions: Email Our Team at 
+    <u>everythingfertilitybyhimikolei@gmail.com</u> and ALLOW 24-48hrs for a response! We receive HUNDREDS of emails!!! (We Do NOT Answer Questions About Orders on Social Media, Email Our Team 💌)</h3>
+    <br><br><br>
+    <h4 style="text-align: center;">Created For Women With Tubal Ligations (Cut, Clipped, Burnt) Tubal Removal, PCOS, Fibroids, Cysts, Polyps, Fluid Filled Tubes, Adenomyosis, Endometriosis, Birth Control & Hormonal Imbalances, Vaginal Odors, Vaginal Dryness, Ectopics, Miscarriages, Irregular Periods, Heavy/Painful Periods, Irregular Ovulation, Blocked & Scarred Tubes, Pre-Menopause & ALL Forms Of Mild To Severe Infertility</h4>
+    <br><br><br>
+    <h1 style="font-weight: 300;">🔥<strong style="font-style: italic; ">“Yuntie”</strong> The <strong style="font-style: italic; ">Viral</strong> TikTok Influencer <strong style="font-style: italic; ">AND</strong> Public Figure, Better Known As <strong style="font-style: italic; ">Tia Kemp </strong> Has An Important Message For The Ladies Dealing With Fertility Issues & Hormonal Imbalances!</h1>
+<video
+style=""
+    width="100%" 
+    height="600vh" 
+    controls 
+    muted 
+    playsinline 
+    preload="metadata"
+    autoplay>
+    
+    <source src="./video.mp4" type="video/mp4">
+    
+    <!-- Optional fallback -->
+    Your browser does not support the video tag.
+</video>
+
+</section>
+<section class="fertility-promo">
+    <img src="teabag.webp" alt="Women's Loose Leaf Fertility Support Tea by Himiko">
+    
+    <div class="promo-content">
+        <h2 class="offer-headline">
+            ALL LOOSE-LEAF TEAS ARE <strong>BUY 1 GET 1 FREE</strong>!!<br>
+            BUY 2 GET 2 FREE!!! BUY 3 GET 3 FREE!!!<br>
+            &amp; 50% OFF ALL SUPPLEMENTS with UNLIMITED CONSULTS 📲
+        </h2>
+        
+        <h2 class="urgency-headline">
+            It’s 2026! Are you going to stay STUCK with Blocked Tubes, Tubal Ligation regrets,
+            or messed up Ovaries &amp; Uterus? No? I didn’t think so!
+            <span>Let’s Get Started 🩷</span>
+        </h2>
+        
+        <h3 class="product-benefits">
+            Tubal Ligations, Blocked Tubes, Scarred Tubes, Tubal Removal, Partial Tube, Secondary Infertility, Cysts, Fibroids, Heavy Bleeding🩸Endometriosis, Ectopics, Hydrosalpinx, Pre-Menopause, Adenomyosis, Birth Control Imbalances, Recurrent Miscarriages? You NEED Himiko’s SERRAPEPTASE & Everything Fertility Tea‼️ - 🔥ALL ORDERS WITH SERRAPEPTASE COME WITH ACCURATE DIRECTIONS FOR USE FOR YOUR FERTILITY ISSUE & UNLIMITED CONSULTS WITH HIMIKO FOR 6 MONTHS TO HELP YOU CONCEIVE OR BALANCE YOUR HORMONES‼️
+        </h3>
+        
+        <p class="serrapeptase-highlight">
+            You NEED Himiko’s SERRAPEPTASE &amp; Everything Fertility Tea‼️
+        </p>
+        
+        <p class="consult-info">
+            🔥 ALL ORDERS WITH SERRAPEPTASE include accurate directions for your specific fertility issue
+            + <strong>UNLIMITED CONSULTS WITH HIMIKO FOR 6 MONTHS</strong> to help you conceive or balance your hormones‼️
+        </p>
+        
+        <h2 class="brand-name">Everything Fertility by Himiko</h2>
+        
+        <h2 class="product-title">
+            BUY 1 GET 1 FREE💕 TikTok Viral🔥 (1) Pack Of Women's Loose Leaf Fertility Support Tea By Himiko Lei (Tubal Ligations, Scar Tissue & Wound Repair, Hormonal Imbalances, Ovary & Uterus Repair, PCOS, Fibroids, Endometriosis, Etc.,) Heart Infuser❤️
+        </h2>
+        
+        <!-- Quantity Selector -->
+        <div class="quantity-selector">
+            <label for="quantity">Quantity:</label>
+            <div class="qty-buttons">
+                <button type="button" class="qty-btn minus">-</button>
+                <input type="number" id="quantity" value="1" min="1" max="3" readonly>
+                <button type="button" class="qty-btn plus">+</button>
+            </div>
+            <span class="qty-note">Buy 1 or 2 packs (BOGO applies automatically)</span>
+        </div>
+        
+        <div class="price-container">
+            <!-- With Infuser (Sale) -->
+            <div class="price-with" id="with-price">
+                <p class="old-price"><del>$59.99 USD</del></p>
+                <p class="new-price" id="with-final-price">$33.96 USD</p>
+                <span class="sale-badge">Sale</span>
+            </div>
+            
+            <!-- Without Infuser -->
+            <p class="price-without" id="without-price">$16.98 USD</p>
+        </div>
+        
+        <p class="shipping-note">Shipping calculated at checkout.</p>
+        <p class="infuser-note">(Optional) Heart Shaped Tea Infuser ❤️</p>
+        
+        <div class="button-group">
+            <button id="without-btn" class="btn without-btn">
+                Without - Heart Shaped Tea Infuser ❤️
+            </button>
+            
+            <button id="with-btn" class="btn with-btn">
+                With - Heart Shaped Tea Infuser ❤️
+            </button>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="add-to-cart" class="action-btn add-to-cart">
+                Add to Cart
+            </button>
+    <button id="buy-now" class="action-btn buy-now">
+        Buy Now
+    </button>
+    </div>
+    </div>
+</section>
+
+    <div class="catalog-container">
+        <div class="catalog-header">
+            <h1>Everything Fertility’s Featured Collection</h1>
+            <p style="color:#64748b; font-size:17px;">Everything Fertility’s Featured Collection Of Products For PCOS, Cysts, Fibroids, Hormonal Imbalance, Endometriosis, Irregular Menstruation, Irregular Ovulation, IVF Prep, Tubal Ligations, Ovary & Uterus Health, Blocked Fallopian Tubes, Scarred & Fluid Filled Fallopian Tubes, Damaged Fallopian Tubes & So Much More!</p>
+        </div>
+        
+        <div class="products-grid" id="products-grid"></div>
+    </div>
+
+<section class="fertility-promo">
+    <!-- Featured Product Section -->
+<section class="featured-product">
+    <div class="container">
+   
+        
+        <div id="featured-product" class="featured-card">
+            <!-- Content will be loaded here by JavaScript -->
+        </div>
+    </div>
+</section>
+</section>
+
+
+
+
+
+
+<footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-about">
+      <img src="./logo2.webp" alt="logo" loading="lazy" width="120" />
+      <h3>Everything Fertility By Himiko</h3>
+      <p>
+        <i class="fas fa-shield-heart"></i>
+        Trusted store for premium fertility solutions with fast support & worldwide delivery.
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://tiktok.com/@fertilitybyhimikolei"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div>
+      <h4><i class="fas fa-file-contract"></i> Policies</h4>
+      <div class="footer-links">
+        <a href="terms.html"><i class="fas fa-angle-right"></i> Terms of Service</a>
+        <a href="refund.html"><i class="fas fa-angle-right"></i> Refund Policy</a>
+        <a href="shipping-policy.html"><i class="fas fa-angle-right"></i> Shipping Policy</a>
+        <a href="contact.html"><i class="fas fa-angle-right"></i> Contact Support</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="footer-support">
+      <h4><i class="fas fa-headset"></i> Need Help?</h4>
+      <p>Get quick updates about your order or product support.</p>
+      <a href="contact.html" class="support-btn">
+        <i class="fas fa-paper-plane"></i> Contact Support
+      </a>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="footer-newsletter">
+      <h4><i class="fas fa-envelope"></i> Join Our Community</h4>
+      <p>Get fertility tips, product updates & exclusive discounts.</p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TRUST + PAYMENTS -->
+  <div class="footer-trust">
+
+    <div class="trust-badges">
+      <span><i class="fas fa-lock"></i> Secure Payments</span>
+      <span><i class="fas fa-truck-fast"></i> Fast Shipping</span>
+      <span><i class="fas fa-globe"></i> Worldwide Delivery</span>
+    </div>
+
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Everything Fertility By Himiko. All rights reserved.</p>
+  </div>
+
+</footer>
+
+<!-- FLOATING BUTTON -->
+<a href="contact.html" class="floating-contact">
+  <i class="fas fa-headset"></i>
+</a>
+
+<script>
+    // ==================== GLOBAL VARIABLES ====================
+    let cart = [];
+    let isWithInfuser = false;      // Default: Without Infuser
+    let currentQuantity = 1;
+    
+    const basePrice = 16.98;
+    const infuserExtra = 10;
+
+    // ==================== DOM ELEMENTS ====================
+    let withPriceContainer, withoutPriceElement, withFinalPrice;
+    let withBtn, withoutBtn, quantityInput, minusBtn, plusBtn;
+    let addToCartBtn, buyNowBtn;
+
+    // ==================== CART FUNCTIONS ====================
+    function loadCart() {
+        try {
+            const saved = localStorage.getItem('cart');
+            cart = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Failed to load cart:', e);
+            cart = [];
+        }
+    }
+
+    function saveCart() {
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        } catch (e) {
+            console.error('Failed to save cart:', e);
+        }
+    }
+
+    function updateCartCount() {
+        const badge = document.getElementById('cart-count');
+        if (!badge) return;
+
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+
+    // ==================== PRODUCT DETAIL FUNCTIONS ====================
+    function updatePrices() {
+        const withTotal = (basePrice + infuserExtra) * currentQuantity;
+        const withoutTotal = basePrice * currentQuantity;
+
+        if (withFinalPrice) withFinalPrice.textContent = `$${withTotal.toFixed(2)} USD`;
+        if (withoutPriceElement) withoutPriceElement.textContent = `$${withoutTotal.toFixed(2)} USD`;
+    }
+
+    function selectOption(isWith) {
+        isWithInfuser = isWith;
+
+        if (isWith) {
+            if (withPriceContainer) withPriceContainer.style.display = 'flex';
+            if (withoutPriceElement) withoutPriceElement.style.display = 'none';
+
+            if (withBtn) {
+                withBtn.style.backgroundColor = '#fff';
+                withBtn.style.color = '#0E0E29';
+                withBtn.style.borderColor = '#0E0E29';
+            }
+            if (withoutBtn) {
+                withoutBtn.style.backgroundColor = '#0E0E29';
+                withoutBtn.style.color = '#fff';
+                withoutBtn.style.borderColor = '#64748b';
+            }
+        } else {
+            if (withPriceContainer) withPriceContainer.style.display = 'none';
+            if (withoutPriceElement) withoutPriceElement.style.display = 'block';
+
+            if (withoutBtn) {
+                withoutBtn.style.backgroundColor = '#fff';
+                withoutBtn.style.color = '#0E0E29';
+                withoutBtn.style.borderColor = '#0E0E29';
+            }
+            if (withBtn) {
+                withBtn.style.backgroundColor = '#0E0E29';
+                withBtn.style.color = '#fff';
+                withBtn.style.borderColor = '#64748b';
+            }
+        }
+        updatePrices();
+    }
+
+    function changeQuantity(newQty) {
+        if (newQty < 1) newQty = 1;
+        if (newQty > 10) newQty = 10;
+        currentQuantity = newQty;
+        if (quantityInput) quantityInput.value = currentQuantity;
+        updatePrices();
+    }
+
+    function addToCart() {
+        const optionText = isWithInfuser ? "with Heart Infuser" : "without Infuser";
+        const finalPrice = isWithInfuser ? basePrice + infuserExtra : basePrice;
+
+        const product = {
+            id: isWithInfuser ? 'with-infuser' : 'without-infuser',
+            name: "Women's Loose Leaf Fertility Support Tea",
+            displayName: isWithInfuser 
+                ? "Women's Loose Leaf Fertility Support Tea - with Heart Infuser" 
+                : "Women's Loose Leaf Fertility Support Tea",
+            variant: optionText,
+            description: "Premium Fertility Support Tea",
+            price: finalPrice,
+            quantity: currentQuantity,
+            withInfuser: isWithInfuser,
+            image: "teabag.webp"
+        };
+
+        const existing = cart.find(item => 
+            item.id === product.id && item.withInfuser === isWithInfuser
+        );
+
+        if (existing) {
+            existing.quantity += currentQuantity;
+        } else {
+            cart.push(product);
+        }
+
+        saveCart();
+        updateCartCount();
+
+        const bogoText = currentQuantity >= 1 ? " (BOGO applies!)" : "";
+        showNotification(
+            `✅ Added ${currentQuantity} × ${product.name} ${optionText}${bogoText}`,
+            "success"
+        );
+    }
+function buyNow() {
+    const optionText = isWithInfuser ? "with Heart Infuser" : "without Infuser";
+    const finalPrice = isWithInfuser ? basePrice + infuserExtra : basePrice;
+    
+    const product = {
+        id: isWithInfuser ? 'with-infuser' : 'without-infuser',
+        name: "Women's Loose Leaf Fertility Support Tea",
+        displayName: isWithInfuser ?
+            "Women's Loose Leaf Fertility Support Tea - with Heart Infuser" :
+            "Women's Loose Leaf Fertility Support Tea",
+        variant: optionText,
+        description: "Premium Fertility Support Tea",
+        price: finalPrice,
+        quantity: currentQuantity,
+        withInfuser: isWithInfuser,
+        image: "teabag.webp"
+    };
+    
+    // Since it's "Buy Now", clear the cart first (you only allow 1 item)
+    cart = [];
+    
+    // Add the new product
+    cart.push(product);
+    
+    saveCart();
+    updateCartCount();
+    
+    // Show message
+    showNotification(
+        `✅ Added ${currentQuantity} × ${product.name} ${optionText} (BOGO applies!)`,
+        "success"
+    );
+    
+    // Redirect to cart.html after short delay
+    setTimeout(() => {
+        window.location.href = "cart.html";
+    }, 800);
+}
+
+function showMessage(message, type = "info") {
+    const existing = document.getElementById('cart-message');
+    if (existing) existing.remove();
+    
+    const msg = document.createElement('div');
+    msg.id = 'cart-message';
+    msg.textContent = message;
+    msg.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 14px 28px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 90%;
+        text-align: center;
+    `;
+    
+    if (type === "error") {
+        msg.style.backgroundColor = '#fee2e2';
+        msg.style.color = '#b91c1c';
+        msg.style.border = '1px solid #fca5a5';
+    } else if (type === "success") {
+        msg.style.backgroundColor = '#d1fae5';
+        msg.style.color = '#065f46';
+        msg.style.border = '1px solid #6ee7b7';
+    } else {
+        msg.style.backgroundColor = '#e0f2fe';
+        msg.style.color = '#0369a1';
+        msg.style.border = '1px solid #7dd3fc';
+    }
+    
+    document.body.appendChild(msg);
+    
+    setTimeout(() => msg.remove(), 3500);
+}
+
+    function clearCart() {
+        cart = [];
+        localStorage.removeItem('cart');
+        updateCartCount();
+    }
+
+    // ==================== NOTIFICATION ====================
+    function showNotification(message, type = "success") {
+        const notif = document.createElement("div");
+        const themes = {
+            success: "rgba(34, 197, 94, 0.95)",
+            error: "rgba(239, 68, 68, 0.95)",
+            warning: "rgba(245, 158, 11, 0.95)",
+            default: "rgba(14, 14, 41, 0.9)"
+        };
+        const icons = {
+            success: "fa-solid fa-circle-check",
+            error: "fa-solid fa-circle-xmark",
+            warning: "fa-solid fa-triangle-exclamation",
+            default: "fa-solid fa-bell"
+        };
+
+        notif.style.cssText = `
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(20px) scale(0.95);
+            background: ${themes[type] || themes.default}; color: white; padding: 16px 24px; border-radius: 16px;
+            backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.25); z-index: 10000;
+            opacity: 0; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500;
+            max-width: 90%; text-align: center; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        `;
+
+        notif.innerHTML = `<i class="${icons[type] || icons.default}" style="font-size:18px;"></i><span>${message}</span>`;
+        document.body.appendChild(notif);
+
+        requestAnimationFrame(() => {
+            notif.style.transform = "translateX(-50%) translateY(0) scale(1)";
+            notif.style.opacity = "1";
+        });
+
+        setTimeout(() => {
+            notif.style.opacity = "0";
+            notif.style.transform = "translateX(-50%) translateY(20px) scale(0.95)";
+            setTimeout(() => notif.remove(), 400);
+        }, 3200);
+    }
+
+    // ==================== PRODUCT CATALOG FUNCTIONS ====================
+    async function loadProducts() {
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+
+        try {
+            const response = await fetch('product.json');
+            if (!response.ok) throw new Error('Failed to load products');
+            
+            const data = await response.json();
+            const products = data.products || [];
+            
+            if (products.length === 0) throw new Error('No products found');
+            
+            renderProducts(products);
+        } catch (error) {
+            console.error('Error loading products:', error);
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; color: #64748b;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #f59e0b; margin-bottom: 20px;"></i>
+                    <h3>We're having trouble loading our products</h3>
+                    <p style="margin: 15px auto; max-width: 420px;">Please check your connection and try again.</p>
+                    <button onclick="loadProducts()" style="padding: 12px 28px; background: #0E0E29; color: white; border: none; border-radius: 9999px; cursor: pointer;">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    function renderProducts(products) {
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        products.forEach(product => {
+            const firstImage = product.images && product.images.length > 0 ? product.images[0] : 'teabag.webp';
+            
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <img src="${firstImage}" alt="${product.title}" class="product-image" onerror="this.src='teabag.webp';">
+                <div class="product-info">
+                    <div class="product-desc">${product.description}</div>
+                    <div class="product-price">$${product.price.toFixed(2)} USD</div>
+                </div>
+            `;
+            
+           card.addEventListener('click', () => {
+    window.location.href = `product-detail.html?id=${product.id}`;
+});
+            grid.appendChild(card);
+        });
+    }
+    
+
+// ==================== FEATURED PRODUCT ON HOMEPAGE ====================
+async function loadFeaturedProduct() {
+    const container = document.getElementById('featured-product');
+    if (!container) return;
+    
+    try {
+        const response = await fetch('product.json');
+        if (!response.ok) throw new Error('Failed to load products');
+        
+        const data = await response.json();
+        const products = data.products || [];
+        
+        const featured = products.find(p => p.id === 1);
+        
+        if (!featured) {
+            container.innerHTML = `<p style="text-align:center; color:#64748b; padding:40px;">Featured product not found.</p>`;
+            return;
+        }
+        
+        const firstImage = featured.images?.[0] || 'teabag.webp';
+        
+        container.innerHTML = `
+            <div class="featured-grid">
+                <div class="featured-image">
+                    <img src="${firstImage}" alt="${featured.title}" onerror="this.src='teabag.webp';">
+                </div>
+                
+                <div class="featured-info">
+                    <h3>${featured.title}</h3>
+                    <div class="featured-desc">${featured.description || 'Premium Fertility Support Tea'}</div>
+                    <div class="featured-price" id="featured-price">$${featured.price.toFixed(2)} USD</div>
+                    
+                    <div class="featured-quantity">
+                        <span>Quantity:</span>
+                        <div class="quantity-control">
+                            <button onclick="changeFeaturedQuantity(-1)" class="qty-btn minus">-</button>
+                            <input type="text" id="featured-quantity-input" value="1" readonly>
+                            <button onclick="changeFeaturedQuantity(1)" class="qty-btn plus">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button onclick="addFeaturedToCart(1)" class="action-btn add-to-cart">
+                            Add to Cart
+                        </button>
+                        <button onclick="buyNowFeatured(1)" class="action-btn buy-now">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error loading featured product:', error);
+        container.innerHTML = `<p style="text-align:center; color:#f59e0b; padding:40px;">Unable to load featured product.</p>`;
+    }
+}
+
+// ==================== QUANTITY CONTROL ====================
+let featuredQuantity = 1;
+
+function changeFeaturedQuantity(amount) {
+    featuredQuantity = Math.max(1, Math.min(10, featuredQuantity + amount));
+    const input = document.getElementById('featured-quantity-input');
+    if (input) input.value = featuredQuantity;
+}
+
+// ==================== ADD TO CART FOR FEATURED ====================
+function addFeaturedToCart(productId) {
+    fetch('product.json')
+        .then(res => res.json())
+        .then(data => {
+            const products = data.products || [];
+            const product = products.find(p => p.id == productId);
+            
+            if (!product) {
+                showNotification("Product not found!", "error");
+                return;
+            }
+            
+            const finalPrice = product.price;
+            const displayName = product.title;
+            
+            if (!Array.isArray(cart)) cart = [];
+            
+            const existing = cart.find(item => item.id == product.id);
+            
+            if (existing) {
+                existing.quantity += featuredQuantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.title,
+                    displayName: displayName,
+                    variant: "Standard",
+                    price: finalPrice,
+                    quantity: featuredQuantity,
+                    withInfuser: false,
+                    image: product.images?.[0] || 'teabag.webp'
+                });
+            }
+            
+            saveCart();
+            updateCartCount();
+            
+            showNotification(`✅ Added ${featuredQuantity} × ${displayName} to cart!`, "success");
+        })
+        .catch(err => {
+            console.error(err);
+            showNotification("Failed to add item. Please try again.", "error");
+        });
+}
+
+// ==================== BUY NOW FOR FEATURED ====================
+function buyNowFeatured(productId) {
+    // Clear cart first (since you only allow one item at a time)
+    cart = [];
+    
+    // Add the featured product
+    addFeaturedToCart(productId); // Reuse the function above
+    
+    // Redirect to cart after short delay
+    setTimeout(() => {
+        window.location.href = 'cart.html';
+    }, 700);
+}
+    // ==================== SLIDER FUNCTION ====================
+    function createSlider(sliderId) {
+        const slider = document.getElementById(sliderId);
+        if (!slider) return;
+        const slides = slider.querySelectorAll('.hero-slide');
+        let current = 0;
+        
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[index].classList.add('active');
+        }
+        
+        window[`nextSlide${sliderId.slice(-1)}`] = () => {
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        };
+        
+        window[`prevSlide${sliderId.slice(-1)}`] = () => {
+            current = (current - 1 + slides.length) % slides.length;
+            showSlide(current);
+        };
+    }
+
+    // ==================== MAIN INITIALIZATION ====================
+    function initializePage() {
+        loadCart();
+        updateCartCount();
+
+        // Product Detail Page Setup (if elements exist)
+        withPriceContainer = document.getElementById('with-price');
+        withoutPriceElement = document.getElementById('without-price');
+        withFinalPrice = document.getElementById('with-final-price');
+        
+        withBtn = document.getElementById('with-btn');
+        withoutBtn = document.getElementById('without-btn');
+        
+        quantityInput = document.getElementById('quantity');
+        minusBtn = document.querySelector('.minus');
+        plusBtn = document.querySelector('.plus');
+        
+        addToCartBtn = document.getElementById('add-to-cart');
+        buyNowBtn = document.getElementById('buy-now');
+
+        if (addToCartBtn && buyNowBtn) {
+            if (minusBtn) minusBtn.addEventListener('click', () => changeQuantity(currentQuantity - 1));
+            if (plusBtn) plusBtn.addEventListener('click', () => changeQuantity(currentQuantity + 1));
+
+            if (quantityInput) {
+                quantityInput.addEventListener('input', () => {
+                    let val = parseInt(quantityInput.value);
+                    if (isNaN(val) || val < 1) val = 1;
+                    if (val > 10) val = 10;
+                    changeQuantity(val);
+                });
+            }
+
+            if (withoutBtn) withoutBtn.addEventListener('click', () => selectOption(false));
+            if (withBtn) withBtn.addEventListener('click', () => selectOption(true));
+
+            addToCartBtn.addEventListener('click', addToCart);
+            buyNowBtn.addEventListener('click', buyNow);
+
+            selectOption(false);
+            updatePrices();
+        }
+
+        // Load Featured Product on Homepage
+        if (document.getElementById('featured-product')) {
+            loadFeaturedProduct();
+        }
+
+        // Load Catalog Products if on catalog page
+        if (document.getElementById('products-grid')) {
+            loadProducts();
+        }
+
+        // Hamburger Menu
+        const hamburger = document.getElementById('hamburger');
+        const fullpageNav = document.getElementById('fullpageNav');
+        
+        if (hamburger && fullpageNav) {
+            hamburger.addEventListener('click', () => {
+                fullpageNav.classList.toggle('active');
+                hamburger.classList.toggle('fa-bars');
+                hamburger.classList.toggle('fa-times');
+            });
+            
+            document.querySelectorAll('.fullpage-nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    fullpageNav.classList.remove('active');
+                    hamburger.classList.remove('fa-times');
+                    hamburger.classList.add('fa-bars');
+                });
+            });
+        }
+
+        // Initialize Sliders if present
+        createSlider('slider1');
+        createSlider('slider2');
+    }
+
+    // Start everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', initializePage);
+
+    // Update cart if changed from another tab
+    window.addEventListener('storage', () => {
+        loadCart();
+        updateCartCount();
+    });
+</script>
+</body>
+</html>

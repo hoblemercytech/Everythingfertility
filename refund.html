@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Refund Policy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    :root {
+        --navy: #0E0E29;
+        --pink: #ec4899;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f8fafc;
+        color: #0E0E29;
+        line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        background: #0E0E29;
+        color: white;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 999;
+    }
+
+    .nav-logo {
+        width: 165px;
+        height: 75px;
+        object-fit: contain;
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 22px;
+        font-size: 1.45rem;
+        color: white;
+    }
+
+    .hamburger {
+        font-size: 1.75rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    /* Full nav */
+    .fullpage-nav {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 78px);
+        background:#0E0E29;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.35s ease;
+        z-index: 999;
+    }
+
+    .fullpage-nav.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .fullpage-nav ul {
+        list-style: none;
+        padding-left: 30px;
+        padding-top: 20px;
+    }
+
+    .fullpage-nav li {
+        margin: 25px 0;
+    }
+
+    .fullpage-nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.4rem;
+    }
+
+    /* POLICY SECTION */
+    .container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 25px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    p {
+        margin-bottom: 18px;
+    }
+
+    strong {
+        color: var(--navy);
+    }
+    
+    /* FOOTER */
+.footer {
+  background: linear-gradient(135deg, #0E0E29, #1a1a40);
+  color: #fff;
+  padding: 60px 20px 30px;
+  margin-top: 80px;
+}
+
+/* GRID */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* TEXT */
+.footer p {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+/* LINKS */
+.footer a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #ec4899;
+  transform: translateX(4px);
+}
+
+/* SOCIAL */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.footer-socials a:hover {
+  background: #ec4899;
+}
+
+/* SUPPORT BUTTON */
+.support-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* NEWSLETTER */
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+}
+
+.newsletter-form input::placeholder {
+  color: #94a3b8;
+}
+
+.newsletter-form button {
+  background: #ec4899;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* TRUST + PAYMENTS */
+.footer-trust {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.trust-badges span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.trust-badges i {
+  color: #ec4899;
+}
+
+/* PAYMENT ICONS */
+.payment-icons i {
+  font-size: 28px;
+  margin-left: 15px;
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.payment-icons i:hover {
+  color: #ec4899;
+  transform: scale(1.1);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .footer-trust {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-icons {
+    margin-top: 10px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav id="mainNav">
+    <i class="fas fa-bars hamburger" id="hamburger"></i>
+    <img src="./logo.webp" alt="Everything Fertility by Himiko Logo" class="nav-logo">
+    <div class="nav-icons">
+        <i class="fas fa-search"></i>
+        <a href="cart.html" style="position: relative;color: white; text-decoration: none;">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count" style="display:none;"></span>
+        </a>
+    </div>
+</nav>
+
+<!-- Full Menu -->
+<div class="fullpage-nav" id="fullpageNav">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="catalog.html">Catalog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</div>
+
+<!-- Refund Policy -->
+<div class="container">
+  <h1>Refund Policy</h1>
+
+  <p>
+    By placing an order with Everything Fertility By Himiko, you agree to the refund policy outlined below. It is your responsibility to read and understand this policy before completing your purchase.
+  </p>
+
+  <p>
+    <strong>All Sales Policy:</strong> All sales are considered final. We do not offer routine refunds, returns, or exchanges once an order has been placed.
+  </p>
+
+  <p>
+    <strong>Need Help With Your Order?</strong> If you experience any issue with your order, please contact our support team directly through this website. We are committed to reviewing your case and working with you to reach a fair resolution where applicable.
+  </p>
+
+  <p>
+    <strong>Shipping Time Acknowledgment:</strong> Due to high demand and viral popularity, standard orders may take approximately 6–12 weeks (or longer) to ship. By choosing standard shipping, you acknowledge and accept these timeframes.
+  </p>
+
+  <p>
+    Express Orders are prioritized and typically ship within 7 business days or up to 30 days maximum. Some express orders may require verification before shipment. Failure to complete verification may result in delays or cancellation.
+  </p>
+
+  <p>
+    <strong>Cancellations:</strong> Orders cannot be cancelled once processing has begun. If you need assistance, contact us immediately.
+  </p>
+
+  <p>
+    <strong>Disputes & Chargebacks:</strong> Filing a dispute with your bank may take 30 days or more to resolve and may delay the process significantly. In many cases, it does not result in a faster solution.
+  </p>
+
+  <p>
+    The fastest way to resolve any issue is to contact our support team directly through this website so we can assist you as quickly as possible.
+  </p>
+
+  <p>
+      <strong>Customer Conduct:</strong> We reserve the right to refuse service or cancel orders if a customer engages in abusive, disrespectful, or inappropriate behavior toward our staff.
+  </p>
+  
+  <!-- NEW LINK ADDED -->
+  <p style="text-align:center; margin-top:30px;">
+      <a href="contact.html" style="
+        display:inline-block;
+        background:#0E0E29;
+        color:#fff;
+        padding:12px 20px;
+        border-radius:8px;
+        text-decoration:none;
+        font-weight:600;
+    ">
+          Need a refund? Contact us
+      </a>
+  </p>
+  
+  </div>
+
+</div>
+<footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-about">
+      <img src="./logo2.webp" alt="logo" loading="lazy" width="120" />
+      <h3>Everything Fertility By Himiko</h3>
+      <p>
+        <i class="fas fa-shield-heart"></i>
+        Trusted store for premium fertility solutions with fast support & worldwide delivery.
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://tiktok.com/@fertilitybyhimikolei"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div>
+      <h4><i class="fas fa-file-contract"></i> Policies</h4>
+      <div class="footer-links">
+        <a href="terms.html"><i class="fas fa-angle-right"></i> Terms of Service</a>
+        <a href="refund.html"><i class="fas fa-angle-right"></i> Refund Policy</a>
+        <a href="shipping-policy.html"><i class="fas fa-angle-right"></i> Shipping Policy</a>
+        <a href="contact.html"><i class="fas fa-angle-right"></i> Contact Support</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="footer-support">
+      <h4><i class="fas fa-headset"></i> Need Help?</h4>
+      <p>Get quick updates about your order or product support.</p>
+      <a href="contact.html" class="support-btn">
+        <i class="fas fa-paper-plane"></i> Contact Support
+      </a>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="footer-newsletter">
+      <h4><i class="fas fa-envelope"></i> Join Our Community</h4>
+      <p>Get fertility tips, product updates & exclusive discounts.</p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TRUST + PAYMENTS -->
+  <div class="footer-trust">
+
+    <div class="trust-badges">
+      <span><i class="fas fa-lock"></i> Secure Payments</span>
+      <span><i class="fas fa-truck-fast"></i> Fast Shipping</span>
+      <span><i class="fas fa-globe"></i> Worldwide Delivery</span>
+    </div>
+
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Everything Fertility By Himiko. All rights reserved.</p>
+  </div>
+
+</footer>
+
+
+
+
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const fullpageNav = document.getElementById('fullpageNav');
+
+hamburger.addEventListener('click', () => {
+    fullpageNav.classList.toggle('active');
+    hamburger.classList.toggle('fa-bars');
+    hamburger.classList.toggle('fa-times');
+});
+</script>
+
+</body>
+</html>

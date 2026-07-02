@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terms of Service</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+        --navy: #0E0E29;
+        --pink: #ec4899;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f8fafc;
+        color: #0E0E29;
+        line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #0E0E29;
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 999;
+    }
+
+    .nav-logo {
+        width: 165px;
+        height: 75px;
+        object-fit: contain;
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 22px;
+        font-size: 1.45rem;
+        color: white;
+    }
+
+    .hamburger {
+        font-size: 1.75rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    /* FULL MENU */
+    .fullpage-nav {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 78px);
+        background:#0E0E29;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.35s ease;
+        z-index: 999;
+    }
+
+    .fullpage-nav.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .fullpage-nav ul {
+        list-style: none;
+        padding-left: 30px;
+        padding-top: 20px;
+    }
+
+    .fullpage-nav li {
+        margin: 25px 0;
+    }
+
+    .fullpage-nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.4rem;
+    }
+
+    /* CONTENT */
+    .container {
+        max-width: 900px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 15px;
+    }
+    
+    /* FOOTER */
+.footer {
+  background: linear-gradient(135deg, #0E0E29, #1a1a40);
+  color: #fff;
+  padding: 60px 20px 30px;
+  margin-top: 80px;
+}
+
+/* GRID */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* TEXT */
+.footer p {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+/* LINKS */
+.footer a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #ec4899;
+  transform: translateX(4px);
+}
+
+/* SOCIAL */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.footer-socials a:hover {
+  background: #ec4899;
+}
+
+/* SUPPORT BUTTON */
+.support-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* NEWSLETTER */
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+}
+
+.newsletter-form input::placeholder {
+  color: #94a3b8;
+}
+
+.newsletter-form button {
+  background: #ec4899;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* TRUST + PAYMENTS */
+.footer-trust {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.trust-badges span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.trust-badges i {
+  color: #ec4899;
+}
+
+/* PAYMENT ICONS */
+.payment-icons i {
+  font-size: 28px;
+  margin-left: 15px;
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.payment-icons i:hover {
+  color: #ec4899;
+  transform: scale(1.1);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .footer-trust {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-icons {
+    margin-top: 10px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+    <i class="fas fa-bars hamburger" id="hamburger"></i>
+    <img src="./logo.webp" class="nav-logo">
+    <div class="nav-icons">
+        <i class="fas fa-search"></i>
+        <a href="cart.html" style="color:white; text-decoration:none;">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+    </div>
+</nav>
+
+<!-- MENU -->
+<div class="fullpage-nav" id="fullpageNav">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="catalog.html">Catalog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</div>
+
+<!-- TERMS CONTENT -->
+<div class="container">
+
+    <h1>Terms of Service</h1>
+
+    <p>
+        By placing an order with Everything Fertility By Himiko, you agree to these Terms of Service in full.
+        It is your responsibility to read and understand them before purchase.
+    </p>
+
+    <h2>Shipping & Delivery</h2>
+
+    <p>
+        I understand that WE ARE VIRAL and that standard shipping has a 4–6 week turnaround time.
+    </p>
+
+    <p>
+        Express shipping is available for faster delivery.
+    </p>
+
+    <p>
+        Express Orders are shipped within 3 business days and delivered within approximately 1 week.
+    </p>
+
+    <p>
+        Express Orders may require verification before shipping. Failure to complete verification may result in delay or cancellation.
+    </p>
+
+    <h2>Cancellations & Refunds</h2>
+
+    <p>
+        I understand that for ANY reason I cancel my order before, during, or after delivery, I will NOT receive a refund.
+    </p>
+
+    <p>
+        Everything Fertility maintains a strict NO REFUND POLICY. Refunds, returns, or exchanges are not provided once an order is placed and processing begins.
+    </p>
+
+    <h2>Disputes</h2>
+
+    <p>
+        Filing a dispute or chargeback may delay resolution and will be handled according to the agreed terms of purchase.
+    </p>
+
+    <h2>Customer Conduct</h2>
+
+    <p>
+        We reserve the right to cancel orders and refuse service for abusive, disrespectful, or inappropriate behavior toward staff.
+    </p>
+
+</div>
+
+<footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-about">
+      <img src="./logo2.webp" alt="logo" loading="lazy" width="120" />
+      <h3>Everything Fertility By Himiko</h3>
+      <p>
+        <i class="fas fa-shield-heart"></i>
+        Trusted store for premium fertility solutions with fast support & worldwide delivery.
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://tiktok.com/@fertilitybyhimikolei"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div>
+      <h4><i class="fas fa-file-contract"></i> Policies</h4>
+      <div class="footer-links">
+        <a href="terms.html"><i class="fas fa-angle-right"></i> Terms of Service</a>
+        <a href="refund.html"><i class="fas fa-angle-right"></i> Refund Policy</a>
+        <a href="shipping-policy.html"><i class="fas fa-angle-right"></i> Shipping Policy</a>
+        <a href="contact.html"><i class="fas fa-angle-right"></i> Contact Support</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="footer-support">
+      <h4><i class="fas fa-headset"></i> Need Help?</h4>
+      <p>Get quick updates about your order or product support.</p>
+      <a href="contact.html" class="support-btn">
+        <i class="fas fa-paper-plane"></i> Contact Support
+      </a>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="footer-newsletter">
+      <h4><i class="fas fa-envelope"></i> Join Our Community</h4>
+      <p>Get fertility tips, product updates & exclusive discounts.</p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TRUST + PAYMENTS -->
+  <div class="footer-trust">
+
+    <div class="trust-badges">
+      <span><i class="fas fa-lock"></i> Secure Payments</span>
+      <span><i class="fas fa-truck-fast"></i> Fast Shipping</span>
+      <span><i class="fas fa-globe"></i> Worldwide Delivery</span>
+    </div>
+
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Everything Fertility By Himiko. All rights reserved.</p>
+  </div>
+
+</footer>
+
+
+
+
+
+
+
+
+<!-- SCRIPT -->
+<script>
+const hamburger = document.getElementById('hamburger');
+const fullpageNav = document.getElementById('fullpageNav');
+
+hamburger.addEventListener('click', () => {
+    fullpageNav.classList.toggle('active');
+    hamburger.classList.toggle('fa-bars');
+    hamburger.classList.toggle('fa-times');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed - Everything Fertility by Himiko</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --emerald: #166534;
+      --emerald-light: #4ade80;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 60%, #f0fdf4 100%);
+      color: #1f2937;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hero-font { font-family: 'Playfair Display', sans-serif; }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-emoji { font-size: 5rem; display: block; margin-bottom: 16px; }
+    .hero h1 {
+      font-family: 'Playfair Display', sans-serif;
+      font-size: 3.2rem;
+      color: var(--emerald);
+      margin-bottom: 10px;
+    }
+    .hero .subtitle { font-size: 1.35rem; color: var(--emerald); font-weight: 500; }
+    .hero .tagline { color: #4b5563; margin-top: 6px; font-size: 1rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.12);
+      overflow: hidden;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .card-header {
+      background: var(--emerald);
+      color: white;
+      padding: 28px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .card-header .label { font-size: 0.85rem; opacity: 0.8; margin-bottom: 3px; }
+    .card-header .value { font-size: 1.5rem; font-weight: 700; }
+    .status-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-body { padding: 36px; }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--emerald);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Info grid ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 560px) { .info-grid { grid-template-columns: 1fr; } }
+
+    .info-block { color: #374151; line-height: 1.8; font-size: 0.95rem; }
+    .info-block strong { color: #111827; }
+
+    /* ── Items ── */
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .item-img {
+      width: 68px; height: 68px; object-fit: cover;
+      border-radius: 12px; flex-shrink: 0;
+    }
+    .item-img-placeholder {
+      width: 68px; height: 68px; border-radius: 12px;
+      background: #f3f4f6; display: flex; align-items: center;
+      justify-content: center; color: #9ca3af; font-size: 11px;
+      flex-shrink: 0; text-align: center;
+    }
+    .item-name { font-weight: 600; color: #111827; font-size: 0.95rem; }
+    .item-qty  { font-size: 0.85rem; color: #6b7280; margin-top: 2px; }
+    .item-price { font-weight: 700; color: var(--emerald); white-space: nowrap; margin-left: auto; }
+
+    /* ── Totals ── */
+    .totals {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 2px solid #e5e7eb;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #374151;
+    }
+    .grand-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--emerald);
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #d1d5db;
+    }
+
+    /* ── Delivery box ── */
+    .delivery-box {
+      margin-top: 28px;
+      padding: 18px 22px;
+      background: #f0fdf4;
+      border-radius: 14px;
+      border: 1px solid #bbf7d0;
+      font-size: 0.95rem;
+      color: #166534;
+    }
+    .delivery-box strong { font-weight: 700; }
+
+    /* ── CTA ── */
+    .cta-wrap {
+      text-align: center;
+      margin-top: 36px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--emerald);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(22,101,52,0.25);
+    }
+    .btn:hover { background: #14532d; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(22,101,52,0.3); }
+    .cta-note { margin-top: 20px; color: #6b7280; font-size: 0.9rem; }
+
+    /* ── Loading / error state ── */
+    .state-box {
+      padding: 60px 40px;
+      text-align: center;
+      color: #6b7280;
+    }
+    .state-box .spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid #e5e7eb;
+      border-top-color: var(--emerald);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-emoji">🌿</span>
+    <h1 class="hero-font">Thank You!</h1>
+    <p class="subtitle">Your order has been confirmed</p>
+    <p class="tagline">We're honored to support your fertility journey 💕</p>
+  </div>
+
+  <!-- Order card -->
+  <div class="card" id="order-card">
+    <div class="state-box" id="loadingState">
+      <div class="spinner"></div>
+      <p>Loading your order details…</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap" id="ctaWrap" style="display:none;">
+    <a href="index.html" class="btn">Return to Shop</a>
+    <p class="cta-note">A confirmation email has been sent to your inbox.</p>
+  </div>
+
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  const sb = createClient(
+  'https://oyibjutaqanpbjohxthd.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95aWJqdXRhcWFucGJqb2h4dGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzE1NzgsImV4cCI6MjA5ODQwNzU3OH0.r3QMpJVyoNHHaKF_Itjqocr6cjk3OZgK9vMckblPqME'
+);
+
+  /* ── Read sessionStorage (set by payment.html before redirect) ── */
+  let orderData = {};
+  try { orderData = JSON.parse(sessionStorage.getItem('orderData') || '{}'); } catch(e) {}
+
+  const fd        = orderData.formData || {};
+  const cart      = orderData.cart     || [];
+  const email     = orderData.email    || fd.email || '';
+  const subtotal  = parseFloat(orderData.subtotal  || 0);
+  const shipping  = parseFloat(orderData.shipping  || 0);
+  const tip       = parseFloat(orderData.tip       || 0);
+  const grandTotal= parseFloat(orderData.grandTotal|| 0);
+
+  /* ── Also try to get the order_number from Supabase by email ── */
+  async function loadPage() {
+    let orderNumber = null;
+
+    if (email) {
+      try {
+        const { data } = await sb
+          .from('orders')
+          .select('order_number, created_at')
+          .eq('email', email)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (data) orderNumber = data.order_number;
+      } catch(e) { /* non-critical, continue */ }
+    }
+
+    renderPage(orderNumber);
+  }
+
+  function renderPage(orderNumber) {
+    const card = document.getElementById('order-card');
+
+    // Shipping method display
+    const shippingDisplay = fd.shippingDisplay || fd.shippingMethod || 'Standard Shipping';
+
+    // Delivery estimate
+    const sm = shippingDisplay.toLowerCase();
+    let estimate = '7–10 business days';
+    if (sm.includes('express'))  estimate = '2–4 business days';
+    if (sm.includes('pickup'))   estimate = 'Ready for pickup today in Ibadan';
+
+    // Build items HTML
+    let itemsHTML = '';
+    if (cart.length > 0) {
+      cart.forEach((item, i) => {
+        const imgKey = `product_image_${i}`;
+        const imgSrc = (orderData[imgKey]) || item.image || null;
+        const imgEl  = imgSrc
+          ? `<img class="item-img" src="${imgSrc}" alt="${item.name || 'Product'}">`
+          : `<div class="item-img-placeholder">No Image</div>`;
+
+        itemsHTML += `
+          <div class="order-item">
+            ${imgEl}
+            <div style="flex:1;">
+              <div class="item-name">${item.name || item.displayName || 'Product'}</div>
+              <div class="item-qty">Qty: ${item.quantity || 1}</div>
+            </div>
+            <div class="item-price">$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</div>
+          </div>`;
+      });
+    } else {
+      itemsHTML = `<p style="color:#9ca3af; text-align:center; padding:20px 0;">No item details available.</p>`;
+    }
+
+    card.innerHTML = `
+      <!-- Header -->
+      <div class="card-header">
+        <div>
+          <div class="label">Order Number</div>
+          <div class="value">${orderNumber || 'HL-' + Date.now().toString().slice(-6)}</div>
+        </div>
+        <div class="status-badge">✅ Confirmed</div>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Shipping & Contact -->
+        <div class="info-grid">
+          <div>
+            <div class="section-title">📦 Shipping Details</div>
+            <div class="info-block">
+              <strong>${fd.firstName || ''} ${fd.lastName || ''}</strong><br>
+              ${fd.address || '—'}<br>
+              ${fd.city || ''}${fd.city && fd.state ? ', ' : ''}${fd.state || ''} ${fd.zip || ''}<br>
+              ${fd.country || 'Nigeria'}<br><br>
+              <strong>Method:</strong> ${shippingDisplay}
+            </div>
+          </div>
+          <div>
+            <div class="section-title">📬 Contact</div>
+            <div class="info-block">
+              <strong>Email:</strong> ${email || '—'}<br>
+              <strong>Phone:</strong> ${fd.phone || 'Not provided'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="section-title">🛍️ Your Items</div>
+        <div id="order-items">${itemsHTML}</div>
+
+        <!-- Totals -->
+        <div class="totals">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>$${subtotal.toFixed(2)}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping</span>
+            <span>$${shipping.toFixed(2)}</span>
+          </div>
+          ${tip > 0 ? `
+          <div class="total-row">
+            <span>Support Tip 💕</span>
+            <span>$${tip.toFixed(2)}</span>
+          </div>` : ''}
+          <div class="grand-total">
+            <span>Total Paid</span>
+            <span>$${grandTotal.toFixed(2)} USD</span>
+          </div>
+        </div>
+
+        <!-- Delivery estimate -->
+        <div class="delivery-box">
+          <strong>Estimated Delivery:</strong>
+          <span style="margin-left:10px;">${estimate}</span>
+        </div>
+
+      </div>
+    `;
+
+    // Show CTA
+    document.getElementById('ctaWrap').style.display = 'block';
+
+    // Clear sessionStorage now that it's rendered
+    sessionStorage.removeItem('orderData');
+  }
+
+  window.onload = loadPage;
+</script>
+
+</body>
+</html>

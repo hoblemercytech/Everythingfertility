@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Track Your Order — Everything Fertility by Himiko</title>
+
+<script>
+  (function() { document.documentElement.style.background = '#0b1220'; })();
+</script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  :root {
+    --bg: #0b1220;
+    --card: #141e33;
+    --card-border: #22314f;
+    --inset: #0b1220;
+    --inset-border: #1e2c48;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --muted: #64748b;
+    --accent: #38bdf8;
+    --accent-2: #8b8ff0;
+    --success: #22c55e;
+    --success-2: #15803d;
+  }
+
+  * { box-sizing: border-box; }
+  html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 40px 18px 60px;
+  }
+
+  .wordmark { text-align: center; margin-bottom: 30px; }
+  .wordmark h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 21px; font-weight: 400; margin: 0;
+    color: var(--text); letter-spacing: 0.01em;
+  }
+  .wordmark h1 em { color: var(--accent-2); font-style: italic; }
+  .wordmark p {
+    margin: 6px 0 0; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+
+  .lookup-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px 22px;
+    margin-bottom: 20px;
+  }
+  .lookup-card label {
+    display: block; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .lookup-row { display: flex; gap: 10px; }
+  .lookup-row input {
+    flex: 1; background: var(--inset); border: 1px solid var(--inset-border);
+    border-radius: 10px; padding: 13px 14px; color: var(--text);
+    font-size: 16px; font-family: inherit; min-width: 0;
+  }
+  .lookup-row input::placeholder { color: var(--muted); }
+  .lookup-row input:focus { outline: none; border-color: var(--accent-2); }
+  .lookup-row button {
+    background: var(--accent-2); color: #fff; border: none; border-radius: 10px;
+    padding: 0 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: inherit; white-space: nowrap;
+  }
+  .lookup-row button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .lookup-row button:focus-visible, .lookup-row input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  .error-msg {
+    color: #fca5a5; background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3); border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; margin-top: 14px; display: none;
+  }
+  .error-msg.visible { display: block; }
+
+  #resultCard { display: none; }
+  #resultCard.visible { display: block; }
+
+  .status-banner {
+    border-radius: 16px 16px 0 0;
+    padding: 26px 24px 22px;
+    text-align: center;
+  }
+  .status-banner.st-pending  { background: linear-gradient(135deg, #f59e0b, #b45309); }
+  .status-banner.st-paid     { background: linear-gradient(135deg, #38bdf8, #0369a1); }
+  .status-banner.st-packed   { background: linear-gradient(135deg, #a78bfa, #6d28d9); }
+  .status-banner.st-shipped  { background: linear-gradient(135deg, #8b8ff0, #4c4fc4); }
+  .status-banner.st-delivered { background: linear-gradient(135deg, #22c55e, #15803d); }
+  .status-banner.st-flagged  { background: linear-gradient(135deg, #ef4444, #991b1b); }
+
+  .status-icon-circle {
+    width: 48px; height: 48px; background: rgba(255,255,255,0.18);
+    border-radius: 50%; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .status-banner h2 { margin: 0; font-size: 18px; font-weight: 700; color: #fff; }
+  .status-banner p { margin: 6px 0 0; font-size: 13px; color: rgba(255,255,255,0.9); }
+
+  .card-body {
+    background: var(--card); border: 1px solid var(--card-border); border-top: none;
+    border-radius: 0 0 16px 16px; padding: 0 0 22px;
+  }
+
+  /* Map */
+  .map-section { position: relative; }
+  #routeMap {
+    height: 260px; width: 100%;
+    filter: saturate(0.75) brightness(0.9);
+  }
+  .map-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 500;
+    background: rgba(11,18,32,0.88); backdrop-filter: blur(4px);
+    border: 1px solid rgba(148,163,184,0.25);
+    border-radius: 999px; padding: 5px 12px 5px 10px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10.5px; color: var(--text-dim);
+    letter-spacing: 0.03em;
+  }
+  .map-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(56,189,248,0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(56,189,248,0); }
+  }
+  .eta-strip {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; border-bottom: 1px solid var(--inset-border);
+    font-size: 12px; color: var(--muted);
+  }
+  .eta-strip strong { color: var(--text); font-weight: 600; }
+
+  .steps { display: flex; padding: 24px 22px 22px; margin: 0; }
+  .step { flex: 1; text-align: center; position: relative; }
+  .step-dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--inset); border: 2px solid var(--inset-border);
+    margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--muted); position: relative; z-index: 1;
+  }
+  .step-line {
+    position: absolute; top: 13px; left: 50%; width: 100%; height: 2px;
+    background: var(--inset-border); z-index: 0;
+  }
+  .step:last-child .step-line { display: none; }
+  .step-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .step.done .step-dot { background: var(--success); border-color: var(--success); color: #fff; }
+  .step.done .step-line { background: var(--success); }
+  .step.current .step-dot { background: var(--accent); border-color: var(--accent); color: #0b1220; }
+  .step.done .step-label, .step.current .step-label { color: var(--text); }
+
+  .info-block {
+    background: var(--inset); border: 1px solid var(--inset-border); border-radius: 10px;
+    padding: 14px 16px; margin: 0 22px 14px;
+  }
+  .info-block:last-child { margin-bottom: 0; }
+  .info-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 6px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; }
+  .order-number { font-family: 'SF Mono', Consolas, monospace; color: var(--accent); font-weight: 700; font-size: 14px; }
+  .product-list { font-size: 13px; color: var(--text); line-height: 1.6; margin: 0; }
+  .total-row .info-label { margin: 0; }
+  .total-amount { font-size: 17px; font-weight: 700; color: var(--accent); }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--inset) 25%, var(--inset-border) 37%, var(--inset) 63%);
+    background-size: 400% 100%; animation: shimmer 1.4s ease infinite;
+    border-radius: 10px; height: 60px;
+  }
+  @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+  .footer-note { text-align: center; margin-top: 24px; font-size: 12px; color: var(--muted); }
+  .footer-note a { color: var(--accent-2); text-decoration: none; }
+
+  .leaflet-control-attribution { font-size: 9px !important; background: rgba(11,18,32,0.7) !important; color: #64748b !important; }
+  .leaflet-control-attribution a { color: #94a3b8 !important; }
+  .leaflet-control-zoom { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton { animation: none; }
+    .map-badge .dot { animation: none; }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="wordmark">
+    <h1>Everything Fertility <em>by Himiko</em></h1>
+    <p>Track Your Order</p>
+  </div>
+
+  <div class="lookup-card">
+    <label for="orderNumberInput">Order Number</label>
+    <div class="lookup-row">
+      <input type="text" id="orderNumberInput" placeholder="e.g. 9542" inputmode="text" autocomplete="off"/>
+      <button id="trackBtn" type="button">Track</button>
+    </div>
+    <p id="errorMsg" class="error-msg"></p>
+  </div>
+
+  <div id="loadingCard" class="lookup-card" style="display:none;">
+    <div class="skeleton" style="margin-bottom:10px;"></div>
+    <div class="skeleton" style="height:100px;"></div>
+  </div>
+
+  <div id="resultCard">
+    <div id="statusBanner" class="status-banner st-pending">
+      <div class="status-icon-circle">
+        <svg id="statusIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
+        </svg>
+      </div>
+      <h2 id="statusHeadline">Order Pending</h2>
+      <p id="statusSub">We're waiting on payment confirmation.</p>
+    </div>
+
+<div class="card-body">
+
+  <div class="map-section">
+    <div id="routeMap"></div>
+    <div class="map-badge"><span class="dot"></span> Estimated progress</div>
+  </div>
+  <div class="eta-strip">
+    <span id="etaOrigin">Shipping from California</span>
+    <span id="etaDays"><strong>—</strong> days remaining (est.)</span>
+  </div>
+
+  <div id="flaggedNotice" style="display:none;margin:0 22px 18px;padding:12px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;font-size:12px;color:#fca5a5;line-height:1.5;">
+    This order has been flagged for review. If you have questions, please contact support.
+  </div>
+
+  <div class="steps" id="stepsRow">
+    <div class="step" data-step="pending">
+      <div class="step-line"></div><div class="step-dot">1</div><div class="step-label">Pending</div>
+    </div>
+    <div class="step" data-step="paid">
+      <div class="step-line"></div><div class="step-dot">2</div><div class="step-label">Paid</div>
+    </div>
+    <div class="step" data-step="packed">
+      <div class="step-line"></div><div class="step-dot">3</div><div class="step-label">Packed</div>
+    </div>
+    <div class="step" data-step="shipped">
+      <div class="step-line"></div><div class="step-dot">4</div><div class="step-label">On the Way</div>
+    </div>
+    <div class="step" data-step="delivered">
+      <div class="step-dot">5</div><div class="step-label">Delivered</div>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <p class="info-label">Order Number</p>
+    <div class="info-row"><span class="order-number" id="osOrderNumber">—</span></div>
+  </div>
+
+  <div class="info-block">
+    <p class="info-label">Items</p>
+    <p class="product-list" id="osProduct">—</p>
+  </div>
+
+  <div class="info-block">
+    <p class="info-label">Shipping Address</p>
+    <p class="product-list" id="osAddress">—</p>
+  </div>
+
+  <div class="info-block total-row">
+    <div class="info-row">
+      <span class="info-label" style="margin:0;">Total</span>
+      <span class="total-amount" id="osTotal">$0.00</span>
+    </div>
+  </div>
+
+</div>
+
+  </div>
+
+  <p class="footer-note">
+    Can't find your order number? Check your confirmation email, or
+    <a href="mailto:inbox@everythingfertilitybyhimikolei.shop">contact support</a>.
+  </p>
+
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  const supabaseUrl = "https://oyibjutaqanpbjohxthd.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95aWJqdXRhcWFucGJqb2h4dGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzE1NzgsImV4cCI6MjA5ODQwNzU3OH0.r3QMpJVyoNHHaKF_Itjqocr6cjk3OZgK9vMckblPqME";
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Fixed origin: California (approx central CA warehouse point)
+  const ORIGIN = { lat: 36.7783, lng: -119.4179, label: 'California, USA' };
+
+  const STATUS_CONFIG = {
+    pending: {
+      headline: 'Order Pending',
+      sub: "We're waiting on payment confirmation.",
+      bannerClass: 'st-pending',
+      icon: '<circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M12 7v5l3 3" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
+      routeProgress: 0
+    },
+    paid: {
+      headline: 'Payment Confirmed',
+      sub: "Your order is confirmed and being prepared.",
+      bannerClass: 'st-paid',
+      icon: '<path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
+      routeProgress: 0.05
+    },
+    packed: {
+      headline: 'Order Packed',
+      sub: "Your order has been packed and is ready for pickup by the carrier.",
+      bannerClass: 'st-packed',
+      icon: '<path d="M21 8l-9-5-9 5 9 5 9-5z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8v8l9 5 9-5V8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+      routeProgress: 0.15
+    },
+    shipped: {
+      headline: 'On Its Way',
+      sub: "Your package has shipped and is heading to you.",
+      bannerClass: 'st-shipped',
+      icon: '<path d="M21 8l-9-5-9 5 9 5 9-5z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8v8l9 5 9-5V8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 13v8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+      routeProgress: 0.6
+    },
+    delivered: {
+      headline: 'Delivered',
+      sub: "Your package has arrived. Enjoy!",
+      bannerClass: 'st-delivered',
+      icon: '<path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
+      routeProgress: 1
+    },
+    flagged: {
+      headline: 'Order Flagged',
+      sub: "There's an issue with this order that needs review.",
+      bannerClass: 'st-flagged',
+      icon: '<path d="M12 9v4M12 17h.01" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 4.3 2.5 18a1.5 1.5 0 0 0 1.3 2.2h16.4a1.5 1.5 0 0 0 1.3-2.2L13.7 4.3a1.5 1.5 0 0 0-2.6 0z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>',
+      routeProgress: null // uses last known progress rather than a fixed point
+    }
+  };
+
+  const STEP_ORDER = ['pending', 'paid', 'packed', 'shipped', 'delivered'];
+
+  // Estimated delivery windows (in days) matched against your checkout shipping_method text
+  const SHIPPING_DAYS = {
+    economy:  42, // 6 weeks
+    standard: 28, // 4 weeks
+    express:  4,  // 2-4 business days
+    pickup:   1   // free / local pickup
+  };
+
+  function getEstimatedDays(shippingMethodText) {
+    const text = (shippingMethodText || '').toLowerCase();
+    if (text.includes('economy')) return SHIPPING_DAYS.economy;
+    if (text.includes('express')) return SHIPPING_DAYS.express;
+    if (text.includes('pickup') || text.includes('free')) return SHIPPING_DAYS.pickup;
+    if (text.includes('standard')) return SHIPPING_DAYS.standard;
+    return SHIPPING_DAYS.standard; // sensible default if method text doesn't match
+  }
+
+  function esc(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function formatMoney(n) { return Number(n || 0).toFixed(2); }
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg; el.classList.add('visible');
+  }
+  function clearError() {
+    const el = document.getElementById('errorMsg');
+    el.classList.remove('visible'); el.textContent = '';
+  }
+
+  function renderSteps(status, lastKnownStatus) {
+    // Flagged isn't part of the linear flow — show progress up to whatever
+    // status the order was at before being flagged, so the stepper still makes sense.
+    const effectiveStatus = status === 'flagged' ? (lastKnownStatus || 'pending') : status;
+    const currentIndex = STEP_ORDER.indexOf(effectiveStatus);
+
+    document.querySelectorAll('#stepsRow .step').forEach((stepEl) => {
+      const stepName = stepEl.getAttribute('data-step');
+      const stepIndex = STEP_ORDER.indexOf(stepName);
+      stepEl.classList.remove('done', 'current');
+      if (stepIndex < currentIndex) {
+        stepEl.classList.add('done');
+        stepEl.querySelector('.step-dot').textContent = '✓';
+      } else if (stepIndex === currentIndex && status !== 'flagged') {
+        stepEl.classList.add('current');
+        stepEl.querySelector('.step-dot').textContent = String(stepIndex + 1);
+      } else {
+        stepEl.querySelector('.step-dot').textContent = String(stepIndex + 1);
+      }
+    });
+  }
+
+  // Geocode customer city/country via free Nominatim (OpenStreetMap) API
+  async function geocodeDestination(order) {
+    const query = [order.city, order.state, order.country].filter(Boolean).join(', ');
+    if (!query) return null;
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`, {
+        headers: { 'Accept-Language': 'en' }
+      });
+      const results = await res.json();
+      if (results && results[0]) {
+        return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon), label: query };
+      }
+    } catch (err) {
+      console.error('Geocoding failed:', err);
+    }
+    return null;
+  }
+
+  let mapInstance = null;
+
+  function initMap(origin, destination, progress) {
+    const mapEl = document.getElementById('routeMap');
+    mapEl.innerHTML = '';
+
+    mapInstance = L.map('routeMap', {
+      zoomControl: false,
+      attributionControl: true,
+      dragging: true,
+      scrollWheelZoom: false
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      maxZoom: 18
+    }).addTo(mapInstance);
+
+    const originLatLng = [origin.lat, origin.lng];
+    const destLatLng = [destination.lat, destination.lng];
+
+    const routeLine = L.polyline([originLatLng, destLatLng], {
+      color: '#38bdf8',
+      weight: 2,
+      opacity: 0.5,
+      dashArray: '4, 6'
+    }).addTo(mapInstance);
+
+    const originIcon = L.divIcon({
+      className: '',
+      html: '<div style="width:10px;height:10px;border-radius:50%;background:#64748b;border:2px solid #0b1220;"></div>',
+      iconSize: [14, 14], iconAnchor: [7, 7]
+    });
+    const destIcon = L.divIcon({
+      className: '',
+      html: '<div style="width:10px;height:10px;border-radius:50%;background:#8b8ff0;border:2px solid #0b1220;"></div>',
+      iconSize: [14, 14], iconAnchor: [7, 7]
+    });
+    const packageIcon = L.divIcon({
+      className: '',
+      html: `<div style="font-size:22px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">📦</div>`,
+      iconSize: [26, 26], iconAnchor: [13, 13]
+    });
+
+    L.marker(originLatLng, { icon: originIcon }).addTo(mapInstance);
+    L.marker(destLatLng, { icon: destIcon }).addTo(mapInstance);
+
+    const markerLat = origin.lat + (destination.lat - origin.lat) * progress;
+    const markerLng = origin.lng + (destination.lng - origin.lng) * progress;
+    const packageMarker = L.marker([markerLat, markerLng], { icon: packageIcon }).addTo(mapInstance);
+
+    mapInstance.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+
+    // Gentle settle animation on the package marker
+    let pulse = 0;
+    setInterval(() => {
+      pulse += 0.05;
+      const offset = Math.sin(pulse) * 0.0003;
+      packageMarker.setLatLng([markerLat + offset, markerLng]);
+    }, 100);
+  }
+
+  function renderOrder(order) {
+    const status = STATUS_CONFIG[order.status] ? order.status : 'pending';
+    const config = STATUS_CONFIG[status];
+
+    // For a flagged order, fall back to its last known status for progress math.
+    // If you add a `last_status` or `previous_status` column later, wire it in here.
+    const lastKnownStatus = order.last_status || 'pending';
+    const progressStatus = status === 'flagged' ? lastKnownStatus : status;
+    const progressConfig = STATUS_CONFIG[progressStatus] || STATUS_CONFIG.pending;
+
+    const banner = document.getElementById('statusBanner');
+    banner.className = 'status-banner ' + config.bannerClass;
+    document.getElementById('statusIconSvg').innerHTML = config.icon;
+    document.getElementById('statusHeadline').textContent = config.headline;
+    document.getElementById('statusSub').textContent = config.sub;
+
+    document.getElementById('flaggedNotice').style.display = status === 'flagged' ? 'block' : 'none';
+
+    renderSteps(status, lastKnownStatus);
+
+    document.getElementById('osOrderNumber').textContent = '#' + (order.order_number || String(order.id).slice(0, 8));
+    document.getElementById('osProduct').textContent = order.product || '—';
+
+    const addrParts = [order.full_address, order.city, order.state, order.zip_code, order.country].filter(Boolean);
+    document.getElementById('osAddress').textContent = addrParts.join(', ') || '—';
+    document.getElementById('osTotal').textContent = '$' + formatMoney(order.total) + ' USD';
+
+    const totalDays = getEstimatedDays(order.shipping_method);
+    const daysRemaining = Math.max(0, Math.round(totalDays * (1 - progressConfig.routeProgress)));
+
+    if (status === 'delivered') {
+      document.getElementById('etaDays').innerHTML = '<strong>Delivered</strong>';
+    } else if (status === 'flagged') {
+      document.getElementById('etaDays').innerHTML = '<strong>On hold</strong> — under review';
+    } else {
+      document.getElementById('etaDays').innerHTML = `<strong>${daysRemaining}</strong> days remaining (est.)`;
+    }
+
+    document.getElementById('resultCard').classList.add('visible');
+
+    // Geocode + render map after the card is visible so Leaflet gets correct container size
+    geocodeDestination(order).then((destination) => {
+      if (!destination) {
+        document.getElementById('routeMap').innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;font-size:12px;">Map unavailable for this address</div>';
+        return;
+      }
+      document.getElementById('etaOrigin').textContent = `${ORIGIN.label} → ${destination.label}`;
+      setTimeout(() => initMap(ORIGIN, destination, progressConfig.routeProgress), 50);
+    });
+  }
+
+  async function trackOrder() {
+    const input = document.getElementById('orderNumberInput');
+    const btn = document.getElementById('trackBtn');
+    const orderNumber = input.value.trim();
+
+    clearError();
+    document.getElementById('resultCard').classList.remove('visible');
+
+    if (!orderNumber) { showError('Please enter your order number.'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Searching…';
+    document.getElementById('loadingCard').style.display = 'block';
+
+    try {
+      const { data, error } = await supabase
+        .from('orders').select('*').eq('order_number', orderNumber).maybeSingle();
+
+      if (error) {
+        console.error('Track order error:', error);
+        showError('Something went wrong looking up your order. Please try again.');
+        return;
+      }
+      if (!data) {
+        showError("We couldn't find an order with that number. Double-check and try again.");
+        return;
+      }
+      renderOrder(data);
+    } catch (err) {
+      console.error('Track order exception:', err);
+      showError('Something went wrong looking up your order. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Track';
+      document.getElementById('loadingCard').style.display = 'none';
+    }
+  }
+
+  document.getElementById('trackBtn').addEventListener('click', trackOrder);
+  document.getElementById('orderNumberInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') trackOrder();
+  });
+
+  (function autoFillFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const orderParam = params.get('order');
+    if (orderParam) {
+      document.getElementById('orderNumberInput').value = orderParam;
+      trackOrder();
+    }
+  })();
+</script>
+
+</body>
+</html>

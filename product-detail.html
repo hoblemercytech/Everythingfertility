@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Everything Fertility by Himiko</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0E0E29;
+            --pink: #ec4899;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #0E0E29;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #0E0E29;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* Optional placeholder (if needed) */
+.nav-placeholder {
+    height: 78px;
+    display: none;
+}
+
+/* Logo */
+.nav-logo {
+    width: 165px;
+    height: 75px;
+    object-fit: contain;
+}
+
+/* Right icons */
+.nav-icons {
+    display: flex;
+    gap: 22px;
+    font-size: 1.45rem;
+    color: white;
+}
+
+/* Hamburger */
+.hamburger {
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+/* Optional: slight rotate when active */
+.hamburger.active {
+    transform: rotate(90deg);
+}
+
+/* ========================= */
+/* FULLPAGE NAV (UPDATED) */
+/* ========================= */
+
+.fullpage-nav {
+    position: fixed;
+    top: 100px; /* matches nav height */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 78px);
+
+    background:#0E0E29;
+    backdrop-filter: blur(8px);
+
+    /* Animation setup */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        visibility 0.35s ease;
+
+    z-index: 999;
+}
+
+/* Active state */
+.fullpage-nav.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Menu list */
+.fullpage-nav ul {
+    list-style: none;
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 20px;
+}
+
+/* Menu items */
+.fullpage-nav li {
+    margin: 25px 0;
+
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.3s ease;
+}
+
+/* Animate items when open */
+.fullpage-nav.active li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger animation */
+.fullpage-nav.active li:nth-child(1) { transition-delay: 0.1s; }
+.fullpage-nav.active li:nth-child(2) { transition-delay: 0.2s; }
+.fullpage-nav.active li:nth-child(3) { transition-delay: 0.3s; }
+.fullpage-nav.active li:nth-child(4) { transition-delay: 0.4s; }
+
+/* Links */
+.fullpage-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.fullpage-nav a:hover {
+    color: #ff69b4;
+    padding: 20px;
+    width:100%;
+    background: #8E91B3;
+}
+
+        .detail-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .image-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 20px;
+        }
+
+        .product-desc {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .option-group {
+            margin: 25px 0;
+        }
+
+        .option-btn {
+            padding: 12px 24px;
+            margin-right: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #cbd5e1;
+            border-radius: 9999px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-btn.active {
+            background: var(--navy);
+            color: white;
+            border-color: var(--navy);
+        }
+
+        .quantity-selector {
+            margin: 25px 0;
+        }
+
+        .qty-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .qty-buttons {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            border-radius: 9999px;
+            padding: 6px;
+            width: fit-content;
+        }
+
+        .qty-btn {
+            padding-left: 15px;
+            width: 42px;
+            height: 42px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            background: none;
+            border: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .add-to-cart {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+            border-radius: 9999px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .buy-now {
+            flex: 1;
+            padding: 16px;
+            background: var(--pink);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+
+/* FOOTER */
+.footer {
+  background: linear-gradient(135deg, #0E0E29, #1a1a40);
+  color: #fff;
+  padding: 60px 20px 30px;
+  margin-top: 80px;
+}
+
+/* GRID */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* TEXT */
+.footer p {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+/* LINKS */
+.footer a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #ec4899;
+  transform: translateX(4px);
+}
+
+/* SOCIAL */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.footer-socials a:hover {
+  background: #ec4899;
+}
+
+/* SUPPORT BUTTON */
+.support-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* NEWSLETTER */
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+}
+
+.newsletter-form input::placeholder {
+  color: #94a3b8;
+}
+
+.newsletter-form button {
+  background: #ec4899;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* TRUST + PAYMENTS */
+.footer-trust {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.trust-badges span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.trust-badges i {
+  color: #ec4899;
+}
+
+/* PAYMENT ICONS */
+.payment-icons i {
+  font-size: 28px;
+  margin-left: 15px;
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.payment-icons i:hover {
+  color: #ec4899;
+  transform: scale(1.1);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .footer-trust {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-icons {
+    margin-top: 10px;
+  }
+}
+
+        @media (max-width: 768px) {
+            .detail-container { flex-direction: column; gap: 30px; }
+            .main-image { height: 320px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="mainNav">
+        <i class="fas fa-bars hamburger" id="hamburger"></i>
+        <img src="./logo.webp" alt="Everything Fertility by Himiko Logo" class="nav-logo">
+        <div class="nav-icons">
+            <i class="fas fa-search"></i>
+            <a href="cart.html" style="position: relative;color: white; text-decoration: none;">
+            <i class="fas fa-shopping-cart"></i>
+<!-- Recommended HTML for the badge -->
+<span id="cart-count" 
+      style="display: none; 
+             position: absolute; 
+             top: -6px; 
+             right: -8px; 
+             background: #e11d48; 
+             color: white; 
+             font-size: 12px; 
+             font-weight: bold;
+             min-width: 18px; 
+             height: 18px; 
+             border-radius: 50%; 
+             padding: 0 5px;
+             display: none;
+             align-items: center;
+             justify-content: center;">
+</span>
+    </a>
+        </div>
+    </nav>
+
+    <div class="nav-placeholder" id="navPlaceholder"></div>
+
+    <!-- Full Page Side Navigation -->
+    <div class="fullpage-nav" id="fullpageNav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="catalog.html">Catalog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="detail-container" id="product-detail">
+        <!-- Loaded by JavaScript -->
+    </div>
+    
+    <section style="padding:20px;">
+        <p style="font-weight: 200; font-size: 18px; color: blue;">This description include all information you may need across all product.<br> <strong>YOU</strong> are responsible for emailing: <strong><u>everythingfertilitybyhimikolei@gmail.com</u></strong> for your consult once your item is <strong>DELIVERED!</strong></p>
+        <br><br>
+        <p style="font-weight: 200; font-size: 18px;">We are excited to introduce this Women’s Infertility Support Tea. This tea was created for women with Hormonal Imbalances and those with, experiencing, or in need of female reproductive support based upon issues or concerns related to PCOS, Endometriosis, Adenomyosis, Fibroids, Cysts, Birth Control, Secondary Infertility or Unexplainable Infertility, Irregular Menstruation, Heavy or Long Menstruation, Irregular Ovulation, Fluid Filled Fallopian Tubes, Scarred & Blocked Fallopian Tubes, Low/High AMH, Low/High TSH, Poor Egg Quality, Failed IVF, Implantation, Endometriosis, Prior Tubal Ligations, Previous Ectopics, Frequent Miscarriages, Damaged or Scarred Uterine Tissue, Pre & Post Menopause and so much more related to the female reproductive system, in order to offer support and maintenance of their overall reproductive health. </p>
+        <br>
+        <p style="font-weight: 200; font-size: 18px;"><strong><u>How To Prepare Your Tea :</u></strong>Step 1 tea bag over 1 cup of hot water for 5-20 minutes covered, twice per day. <strong>OR</strong> steep 1 tea bag in a chamber within a tea pot infuser with 1 cup of water, and boil 3-7 minutes twice per day. Do <strong>NOT</strong> drink this tea during your menstrual cycle or during ovulation (if drinking for conception, if not disregard).</p>
+        <br>
+        <p style="font-weight: 200; font-size: 18px;"><strong><u>🔥Hot Tip: To Conserve Your Tea:</u></strong>Step 1 tea bag in a small pot with 2 cups of water and boil 3-7 minutes once per day,<strong>OR</strong> step 1 tea bag in a chamber within a tea pot infuser with 2 cups of water, and boil 3-7 minutes once per day. Do <strong>NOT</strong> drink this tea during your menstrual cycle or during ovulation (if drinking for conception, if not disregard).
+    </p>
+    <br><br>
+    <p style="font-weight: 200; font-size: 18px;"><strong><u>All Natural Ingredients:</u></strong>
+    Chaste Tree Berry, Vitex, Ginger, Nettle Leaf, Raspberry Leaf, Orange Peel, Lady’s Mantle, Peppermint Leaf</p>
+    <br><br>
+    <p style="font-weight: 200; font-size: 18px;">
+        <strong><u>Additional Information:</u></strong>
+        Do <strong>NOT</strong> drink this tea during your menstrual cycle,<strong>OR</strong> during your ovulation. Example #1 - Your menstrual cycle begins with a full flow, do not drink or continue drinking the tea. When your menstrual cycle ends you can resume. Example #2 - Your ovulation is approaching which has been confirmed via ovulation testing, therefore you would pause drinking the tea until ovulation has completed. <span style="color: red;"><strong><u>IRREGULAR BLEEDING</u></strong></span>
+        <strong>If you are experiencing irregular bleeding (spotting) </strong><strong><u> PRIOR</u></strong><strong> to ever starting this tea, drink the tea each day, however once you have confirmed a period (full flow) pause drinking your tea. If you have irregular bleeding (daily/constant flow) <u>PRIOR</u> to ever starting this tea that is daily/constant, continue to drink the tea each day until you no longer have irregular bleeding, at which point you would follow the tea instructions as listed.</strong>
+    </p>
+    <br><br>
+    <p style="font-weight: 200; font-size: 18px;"><strong style="color: blue;"><u>Serrapeptase:</u></strong> Serrapeptase is a form of proteolytic enzymes; these enzymes are known to break down the protein into the smaller components of amino acids and peptides. “Scar tissue and adhesions are the results of excess fibrin (protein) which accumulates due to a lack of systemic enzymes preventing our body from knowing to stop producing fibrin during the healing process.” Serrapeptase “eat” the fibrin proteins that makeup scar tissue and have the unique ability to “know” what is necessary versus what is excess in the body. <strong> In other words, if you have scar tissue, cysts, blockages or damage to your ovaries, uterus or fallopian tubes, have had a tubal ligation or an unsuccessful tubal ligation reversal, ectopics, miscarriages, or any additional issues that have prevented pregnancy or reduced your reproductive functions, Serrapeptase supports those affected areas increasing your chances of pregnancy or improved reproductive functions, while Himiko’s Infertility Support Tea helps balance your hormones, offers womb/implantation support, and ensures that you continue to receive long term support of your reproductive health.  </strong>
+    <br><br>
+    <strong style="color: blue;"><u>How Serrapeptase Helps Internal Scar Tissue?</u></strong> Serrapeptase for internal scar tissues’ remedy is being used extensively now. The scars from any external accident or injury are not only unsightly but can be painful as well. Surgeries are a viable but risky option for scar removal, so the magical potion called Serrapeptase is used as an old scar tissue reducer. Serrapeptase is a form of proteolytic enzymes; these enzymes are known to break down the protein into the smaller components of amino acids and peptides. “Scar tissue and adhesions are the results of excess fibrin (protein) which accumulates due to a lack of systemic enzymes preventing our body from knowing to stop producing fibrin during the healing process.” Serrapeptase “eat” the fibrin proteins that makeup scar tissue and have the unique ability to “know” what is necessary versus what is excess in the body. With adequate amounts of active systemic enzymes in the body, only a minimal amount of scar tissue remains after repairing the damage and hence the scars are removed. 
+    <strong style="color: blue;">Please visit the link below for additional information. You are also encouraged to do your own research on the wonderful benefits of Serrapeptase. </strong> <br><br>
+    
+    <a style="color: black;" href="https://wholefamilyproducts.com/understanding-miracle-serrapeptase-scar-tissue-removal">https://wholefamilyproducts.com/understanding-miracle-serrapeptase-scar-tissue-removal/</a>
+    <br><br>
+    <strong><u>Disclaimer: </u></strong>
+    These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.
+    <br><br>
+    <strong><u>Caution: </u></strong>
+    If you have a medical condition, or are taking any medication, consult with your physician before use. Do not use if breast feeding. Keep this product out of reach of children. Store in a cool dry place. Use the reseal feature after each use. Do not use if top is torn or missing.This product may affect your ovulation and/or menstrual cycle. Please consult your healthcare professional before use.
+    <br><br>
+    <strong><u>Still Have Questions? </u></strong> 
+    Contact staff at Everything Fertility By Himiko at
+    <stong><u>everythingfertilitybyhimikolei@gmail.com</u></stong>
+    (allow up to 24hrs for a response)
+    <br><br>
+    <strong style="color:red;">⚠️ Please also remember, on TikTok, Instagram & Facebook there are individuals </strong> <strong>“pretending to be Himiko”</strong><strong style="color: red;">please do not send these individuals money. If the order was not placed through the website </strong><strong style="color: blue;"> www.everythingfertilitybyhimikolei.shop</strong>
+    <strong> then it is NOT Himiko you have been speaking with! Himiko will NEVER reach out to you or anyone else on social media offering a product, service, or fertility reading. Products, services and fertility readings  are provided only by orders placed on Himiko’s website. Himiko will NOT be held liable if you have sent funds outside of the website listed above to a fraudulent person. </strong>
+    </p>
+    </section>
+<footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-about">
+      <img src="./logo2.webp" alt="logo" loading="lazy" width="120" />
+      <h3>Everything Fertility By Himiko</h3>
+      <p>
+        <i class="fas fa-shield-heart"></i>
+        Trusted store for premium fertility solutions with fast support & worldwide delivery.
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://tiktok.com/@fertilitybyhimikolei"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div>
+      <h4><i class="fas fa-file-contract"></i> Policies</h4>
+      <div class="footer-links">
+        <a href="terms.html"><i class="fas fa-angle-right"></i> Terms of Service</a>
+        <a href="refund.html"><i class="fas fa-angle-right"></i> Refund Policy</a>
+        <a href="shipping-policy.html"><i class="fas fa-angle-right"></i> Shipping Policy</a>
+        <a href="contact.html"><i class="fas fa-angle-right"></i> Contact Support</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="footer-support">
+      <h4><i class="fas fa-headset"></i> Need Help?</h4>
+      <p>Get quick updates about your order or product support.</p>
+      <a href="contact.html" class="support-btn">
+        <i class="fas fa-paper-plane"></i> Contact Support
+      </a>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="footer-newsletter">
+      <h4><i class="fas fa-envelope"></i> Join Our Community</h4>
+      <p>Get fertility tips, product updates & exclusive discounts.</p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TRUST + PAYMENTS -->
+  <div class="footer-trust">
+
+    <div class="trust-badges">
+      <span><i class="fas fa-lock"></i> Secure Payments</span>
+      <span><i class="fas fa-truck-fast"></i> Fast Shipping</span>
+      <span><i class="fas fa-globe"></i> Worldwide Delivery</span>
+    </div>
+
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Everything Fertility By Himiko. All rights reserved.</p>
+  </div>
+
+</footer>
+
+  <script>
+    // ==================== GLOBAL VARIABLES ====================
+    let currentProduct = null;
+    let currentQuantity = 1;
+    let isWithInfuser = false; // Default: Without Infuser
+    let cart = []; // Global cart
+    
+    // ==================== CART FUNCTIONS ====================
+    function loadCart() {
+        try {
+            const saved = localStorage.getItem('cart');
+            cart = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Failed to load cart:', e);
+            cart = [];
+        }
+    }
+    
+    function saveCart() {
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        } catch (e) {
+            console.error('Failed to save cart:', e);
+        }
+    }
+    
+    function updateCartCount() {
+        const badge = document.getElementById('cart-count');
+        if (!badge) return;
+        
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+    
+    // ==================== PRODUCT DETAIL FUNCTIONS ====================
+    async function loadProduct() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get('id'));
+        
+        if (!id) {
+            document.getElementById('product-detail').innerHTML =
+                `<p style="text-align:center; padding:100px;">Product not found.</p>`;
+            return;
+        }
+        
+        try {
+            const response = await fetch('product.json');
+            if (!response.ok) throw new Error('Failed to load products');
+            
+            const data = await response.json();
+            const products = data.products || [];
+            
+            currentProduct = products.find(p => p.id === id);
+            
+            if (!currentProduct) {
+                document.getElementById('product-detail').innerHTML =
+                    `<p style="text-align:center; padding:100px;">Product not found.</p>`;
+                return;
+            }
+            
+            renderProductDetail();
+        } catch (error) {
+            console.error(error);
+            document.getElementById('product-detail').innerHTML =
+                `<p style="text-align:center; padding:100px; color:#ef4444;">Error loading product.</p>`;
+        }
+    }
+    
+    function renderProductDetail() {
+        const container = document.getElementById('product-detail');
+        const firstImage = currentProduct.images && currentProduct.images.length > 0 ?
+            currentProduct.images[0] :
+            'teabag.webp';
+        
+        container.innerHTML = `
+            <div class="image-section">
+                <img src="${firstImage}" alt="${currentProduct.title}" class="main-image" onerror="this.src='teabag.webp';">
+            </div>
+            
+            <div class="info-section">
+                <div class="product-title">${currentProduct.title}</div>
+                <div class="product-price" id="display-price">$${currentProduct.price.toFixed(2)} USD</div>
+                <div class="product-desc">${currentProduct.description}</div>
+
+                <!-- With / Without Infuser Option -->
+                <div class="option-group">
+                    <button class="option-btn ${!isWithInfuser ? 'active' : ''}" onclick="selectOption(false)">Without - Heart Shaped ❤️</button>
+                    <button class="option-btn ${isWithInfuser ? 'active' : ''}" onclick="selectOption(true)">With - Heart Shaped ❤️ (+$10 Donation)</button>
+                </div>
+
+                <div class="quantity-selector">
+                    <label class="qty-label">Quantity:</label>
+                    <div class="qty-buttons">
+                        <div class="qty-btn" onclick="changeQuantity(-1)">–</div>
+                        <input type="text" class="qty-input" id="quantity" value="1" readonly>
+                        <div class="qty-btn" onclick="changeQuantity(1)">+</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                    <button class="buy-now" onclick="buyNow()">Buy Now</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    function selectOption(withInfuser) {
+        isWithInfuser = withInfuser;
+        updatePriceDisplay();
+        
+        // Update active button styles
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.toggle('active',
+                (withInfuser && btn.textContent.includes('With')) ||
+                (!withInfuser && btn.textContent.includes('Without'))
+            );
+        });
+    }
+    
+    function updatePriceDisplay() {
+        if (!currentProduct) return;
+        const basePrice = currentProduct.price;
+        const finalPrice = isWithInfuser ? basePrice + 10 : basePrice;
+        document.getElementById('display-price').textContent = `$${finalPrice.toFixed(2)} USD`;
+    }
+    
+    function changeQuantity(change) {
+        currentQuantity = Math.max(1, currentQuantity + change);
+        const qtyInput = document.getElementById('quantity');
+        if (qtyInput) qtyInput.value = currentQuantity;
+    }
+    
+    // ==================== ADD TO CART ====================
+    function addToCart() {
+        if (!currentProduct) return;
+        
+        const basePrice = currentProduct.price;
+        const finalPrice = isWithInfuser ? basePrice + 10 : basePrice;
+        const variantName = isWithInfuser ? "with Heart Infuser" : "without Infuser";
+        const displayName = `${currentProduct.title} - ${variantName}`;
+        
+        const existing = cart.find(item =>
+            item.id === currentProduct.id && item.withInfuser === isWithInfuser
+        );
+        
+        if (existing) {
+            existing.quantity += currentQuantity;
+        } else {
+            cart.push({
+                id: currentProduct.id,
+                name: currentProduct.title,
+                displayName: displayName,
+                variant: variantName,
+                description: currentProduct.description || 'Premium Fertility Support Tea',
+                price: finalPrice,
+                quantity: currentQuantity,
+                withInfuser: isWithInfuser,
+                image: currentProduct.images ? currentProduct.images[0] : 'teabag.webp'
+            });
+        }
+        
+        saveCart();
+        updateCartCount();
+        
+        showNotification(`✅ Added ${currentQuantity} × ${displayName} to cart!`, "success");
+    }
+    
+    function buyNow() {
+        addToCart();
+        setTimeout(() => {
+            window.location.href = 'cart.html';
+        }, 600);
+    }
+    
+    // ==================== NOTIFICATION ====================
+    function showNotification(message, type = "success") {
+        const notif = document.createElement("div");
+        const themes = {
+            success: "rgba(34, 197, 94, 0.95)",
+            error: "rgba(239, 68, 68, 0.95)"
+        };
+        const icons = {
+            success: "fa-solid fa-circle-check",
+            error: "fa-solid fa-circle-xmark"
+        };
+        
+        notif.style.cssText = `
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(20px) scale(0.95);
+            background: ${themes[type]}; color: white; padding: 16px 24px; border-radius: 16px;
+            backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.25); z-index: 10000;
+            opacity: 0; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500;
+            max-width: 90%; text-align: center; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        `;
+        
+        notif.innerHTML = `<i class="${icons[type]}" style="font-size:18px;"></i><span>${message}</span>`;
+        document.body.appendChild(notif);
+        
+        requestAnimationFrame(() => {
+            notif.style.transform = "translateX(-50%) translateY(0) scale(1)";
+            notif.style.opacity = "1";
+        });
+        
+        setTimeout(() => {
+            notif.style.opacity = "0";
+            notif.style.transform = "translateX(-50%) translateY(20px) scale(0.95)";
+            setTimeout(() => notif.remove(), 400);
+        }, 3200);
+    }
+    
+    // ==================== INITIALIZATION ====================
+    function initializePage() {
+        loadCart();
+        updateCartCount();
+        loadProduct();
+        
+        // Hamburger Menu
+        const hamburger = document.getElementById('hamburger');
+        const fullpageNav = document.getElementById('fullpageNav');
+        
+        if (hamburger && fullpageNav) {
+            hamburger.addEventListener('click', () => {
+                fullpageNav.classList.toggle('active');
+                hamburger.classList.toggle('fa-bars');
+                hamburger.classList.toggle('fa-times');
+            });
+            
+            document.querySelectorAll('.fullpage-nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    fullpageNav.classList.remove('active');
+                    hamburger.classList.remove('fa-times');
+                    hamburger.classList.add('fa-bars');
+                });
+            });
+        }
+    }
+    
+    // Start the page
+    document.addEventListener('DOMContentLoaded', initializePage);
+    
+    // Update badge when cart changes from another tab
+    window.addEventListener('storage', () => {
+        loadCart();
+        updateCartCount();
+    });
+</script>
+</body>
+</html>

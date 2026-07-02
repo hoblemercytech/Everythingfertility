@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog - Everything Fertility by Himiko</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --navy: #0E0E29;
+            --pink: #ec4899;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #0E0E29;
+            line-height: 1.6;
+        }
+
+/* Naevigation */
+nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #0E0E29;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* Optional placeholder (if needed) */
+.nav-placeholder {
+    height: 78px;
+    display: none;
+}
+
+/* Logo */
+.nav-logo {
+    width: 165px;
+    height: 75px;
+    object-fit: contain;
+}
+
+/* Right icons */
+.nav-icons {
+    display: flex;
+    gap: 22px;
+    font-size: 1.45rem;
+    color: white;
+}
+
+/* Hamburger */
+.hamburger {
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+/* Optional: slight rotate when active */
+.hamburger.active {
+    transform: rotate(90deg);
+}
+
+        .catalog-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        .catalog-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .catalog-header h1 {
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+           
+            border-radius: 16px;
+            overflow: hidden;
+           
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+       
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px 10px 18px;
+        }
+
+        .product-desc {
+            font-size: 14.8px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        /* ========================= */
+/* FULLPAGE NAV (UPDATED) */
+/* ========================= */
+
+.fullpage-nav {
+    position: fixed;
+    top: 100px; /* matches nav height */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 78px);
+
+    background:#0E0E29;
+    backdrop-filter: blur(8px);
+
+    /* Animation setup */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        visibility 0.35s ease;
+
+    z-index: 999;
+}
+
+/* Active state */
+.fullpage-nav.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Menu list */
+.fullpage-nav ul {
+    list-style: none;
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 20px;
+}
+
+/* Menu items */
+.fullpage-nav li {
+    margin: 25px 0;
+
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.3s ease;
+}
+
+/* Animate items when open */
+.fullpage-nav.active li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger animation */
+.fullpage-nav.active li:nth-child(1) { transition-delay: 0.1s; }
+.fullpage-nav.active li:nth-child(2) { transition-delay: 0.2s; }
+.fullpage-nav.active li:nth-child(3) { transition-delay: 0.3s; }
+.fullpage-nav.active li:nth-child(4) { transition-delay: 0.4s; }
+
+/* Links */
+.fullpage-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.fullpage-nav a:hover {
+    color: #ff69b4;
+    padding: 20px;
+    width:100%;
+    background: #8E91B3;
+}
+
+/* FOOTER */
+.footer {
+  background: linear-gradient(135deg, #0E0E29, #1a1a40);
+  color: #fff;
+  padding: 60px 20px 30px;
+  margin-top: 80px;
+}
+
+/* GRID */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* TEXT */
+.footer p {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+/* LINKS */
+.footer a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+
+.footer a:hover {
+  color: #ec4899;
+  transform: translateX(4px);
+}
+
+/* SOCIAL */
+.footer-socials a {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.08);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.footer-socials a:hover {
+  background: #ec4899;
+}
+
+/* SUPPORT BUTTON */
+.support-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: white !important;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* NEWSLETTER */
+.footer-newsletter p {
+  margin-bottom: 10px;
+}
+
+.newsletter-form {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+}
+
+.newsletter-form input::placeholder {
+  color: #94a3b8;
+}
+
+.newsletter-form button {
+  background: #ec4899;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* TRUST + PAYMENTS */
+.footer-trust {
+  max-width: 1100px;
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.trust-badges span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.trust-badges i {
+  color: #ec4899;
+}
+
+/* PAYMENT ICONS */
+.payment-icons i {
+  font-size: 28px;
+  margin-left: 15px;
+  color: #cbd5e1;
+  transition: 0.3s;
+}
+
+.payment-icons i:hover {
+  color: #ec4899;
+  transform: scale(1.1);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .footer-trust {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-icons {
+    margin-top: 10px;
+  }
+}
+
+
+        /* Larger screens */
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+            .product-image { height: 240px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="mainNav">
+        <i class="fas fa-bars hamburger" id="hamburger"></i>
+        <img src="./logo.webp" alt="Everything Fertility by Himiko Logo" class="nav-logo">
+        <div class="nav-icons">
+            <i class="fas fa-search"></i>
+            <a href="cart.html" style="position: relative;color: white; text-decoration: none;">
+            <i class="fas fa-shopping-cart"></i>
+<!-- Recommended HTML for the badge -->
+<span id="cart-count" 
+      style="display: none; 
+             position: absolute; 
+             top: -6px; 
+             right: -8px; 
+             background: #e11d48; 
+             color: white; 
+             font-size: 12px; 
+             font-weight: bold;
+             min-width: 18px; 
+             height: 18px; 
+             border-radius: 50%; 
+             padding: 0 5px;
+             display: none;
+             align-items: center;
+             justify-content: center;">
+</span>
+    </a>
+        </div>
+    </nav>
+
+    <div class="nav-placeholder" id="navPlaceholder"></div>
+
+    <!-- Full Page Side Navigation -->
+    <div class="fullpage-nav" id="fullpageNav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="catalog.html">Catalog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="catalog-container">
+        <div class="catalog-header">
+            <h1>Everything Fertility’s Featured Collection</h1>
+            <p style="color:#64748b; font-size:17px;">Everything Fertility’s Featured Collection Of Products For PCOS, Cysts, Fibroids, Hormonal Imbalance, Endometriosis, Irregular Menstruation, Irregular Ovulation, IVF Prep, Tubal Ligations, Ovary & Uterus Health, Blocked Fallopian Tubes, Scarred & Fluid Filled Fallopian Tubes, Damaged Fallopian Tubes & So Much More!</p>
+        </div>
+
+        <div class="products-grid" id="products-grid"></div>
+    </div>
+    
+    <footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- BRAND -->
+    <div class="footer-about">
+      <img src="./logo2.webp" alt="logo" loading="lazy" width="120" />
+      <h3>Everything Fertility By Himiko</h3>
+      <p>
+        <i class="fas fa-shield-heart"></i>
+        Trusted store for premium fertility solutions with fast support & worldwide delivery.
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://tiktok.com/@fertilitybyhimikolei"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div>
+      <h4><i class="fas fa-file-contract"></i> Policies</h4>
+      <div class="footer-links">
+        <a href="terms.html"><i class="fas fa-angle-right"></i> Terms of Service</a>
+        <a href="refund.html"><i class="fas fa-angle-right"></i> Refund Policy</a>
+        <a href="shipping-policy.html"><i class="fas fa-angle-right"></i> Shipping Policy</a>
+        <a href="contact.html"><i class="fas fa-angle-right"></i> Contact Support</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="footer-support">
+      <h4><i class="fas fa-headset"></i> Need Help?</h4>
+      <p>Get quick updates about your order or product support.</p>
+      <a href="contact.html" class="support-btn">
+        <i class="fas fa-paper-plane"></i> Contact Support
+      </a>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="footer-newsletter">
+      <h4><i class="fas fa-envelope"></i> Join Our Community</h4>
+      <p>Get fertility tips, product updates & exclusive discounts.</p>
+
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- TRUST + PAYMENTS -->
+  <div class="footer-trust">
+
+    <div class="trust-badges">
+      <span><i class="fas fa-lock"></i> Secure Payments</span>
+      <span><i class="fas fa-truck-fast"></i> Fast Shipping</span>
+      <span><i class="fas fa-globe"></i> Worldwide Delivery</span>
+    </div>
+
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom">
+    <p>© 2026 Everything Fertility By Himiko. All rights reserved.</p>
+  </div>
+
+</footer>
+
+
+
+<script>
+    let cart = []; // Global cart array
+    
+    // ==================== PRODUCT CATALOG ====================
+    async function loadProducts() {
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+        
+        try {
+            const response = await fetch('product.json');
+            if (!response.ok) throw new Error('Failed to load products');
+            
+            const data = await response.json();
+            const products = data.products || [];
+            
+            if (products.length === 0) throw new Error('No products found');
+            
+            renderProducts(products);
+        } catch (error) {
+            console.error('Error loading products:', error);
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; color: #64748b;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #f59e0b; margin-bottom: 20px;"></i>
+                    <h3>We're having trouble loading our products</h3>
+                    <p style="margin: 15px auto; max-width: 420px;">Please check your connection and try again.</p>
+                    <button onclick="loadProducts()" style="padding: 12px 28px; background: #0E0E29; color: white; border: none; border-radius: 9999px; cursor: pointer;">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    function renderProducts(products) {
+        const grid = document.getElementById('products-grid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        products.forEach(product => {
+            const firstImage = product.images && product.images.length > 0 ?
+                product.images[0] :
+                'teabag.webp';
+            
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <img src="${firstImage}" 
+                     alt="${product.title}" 
+                     class="product-image" 
+                     onerror="this.src='teabag.webp';">
+                <div class="product-info">
+                    <div class="product-desc">${product.description}</div>
+                    <div class="product-price">$${product.price.toFixed(2)} USD</div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                window.location.href = `product-detail.html?id=${product.id}`;
+            });
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    // ==================== CART FUNCTIONS ====================
+    function loadCart() {
+        try {
+            const saved = localStorage.getItem('cart');
+            cart = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Failed to load cart:', e);
+            cart = [];
+        }
+    }
+    
+    function saveCart() {
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        } catch (e) {
+            console.error('Failed to save cart:', e);
+        }
+    }
+    
+    // Update cart count badge on all pages
+    function updateCartCount() {
+        const badge = document.getElementById('cart-count');
+        if (!badge) return;
+        
+        // Calculate total quantity (not just number of items)
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        
+        badge.textContent = totalItems;
+        
+        // Optional: Hide badge when cart is empty
+        if (totalItems > 0) {
+            badge.style.display = 'flex'; // or 'inline-block' or 'block'
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // ==================== INITIALIZATION ====================
+    function init() {
+        loadCart();
+        updateCartCount(); // Show badge on page load
+        
+        // Load products if on catalog page
+        if (document.getElementById('products-grid')) {
+            loadProducts();
+        }
+        
+        // Hamburger menu (unchanged)
+        const hamburger = document.getElementById('hamburger');
+        const fullpageNav = document.getElementById('fullpageNav');
+        
+        if (hamburger && fullpageNav) {
+            hamburger.addEventListener('click', () => {
+                fullpageNav.classList.toggle('active');
+                hamburger.classList.toggle('fa-bars');
+                hamburger.classList.toggle('fa-times');
+            });
+            
+            document.querySelectorAll('.fullpage-nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    fullpageNav.classList.remove('active');
+                    hamburger.classList.remove('fa-times');
+                    hamburger.classList.add('fa-bars');
+                });
+            });
+        }
+    }
+    
+    // Run initialization when page loads
+    window.addEventListener('load', init);
+    
+    // Optional: Listen for storage changes (if cart updated from another tab)
+    window.addEventListener('storage', () => {
+        loadCart();
+        updateCartCount();
+    });
+</script>
+</body>
+</html>
