@@ -2208,9 +2208,16 @@ async function sendBroadcast() {
       sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading file...';
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `${Date.now()}_${safeName}`;
-      const { error: upErr } = await sb.storage
-        .from('broadcast-files')
-        .upload(path, file, { contentType: file.type });
+      const buffer = await file.arrayBuffer();
+if (!buffer.byteLength) {
+  throw new Error('Could not read the file. If it is in iCloud, download it first, then pick it again.');
+}
+const { error: upErr } = await sb.storage
+  .from('broadcast-files')
+  .upload(path, buffer, {
+    contentType: file.type || 'application/octet-stream'
+  });
+
       if (upErr) throw new Error('File upload failed: ' + upErr.message);
       fileUrl = sb.storage.from('broadcast-files').getPublicUrl(path).data.publicUrl;
       fileName = file.name;
